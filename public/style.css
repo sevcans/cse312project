@@ -13,6 +13,19 @@ body {
     box-sizing: border-box;
 }
 
+.my_image {
+    height: 100%;
+}
+
+.image_div {
+    height: 80%;
+    width: 0;
+}
+
+img.post {
+    width: 120px;
+}
+
 /* .title {    
     
     height: 5%;
