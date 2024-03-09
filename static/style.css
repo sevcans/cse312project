@@ -40,9 +40,16 @@ img.post {
     background-color: #f1f1f1;
     text-align: center;
     /* height of this section */
-    height: 14%;
+    height: 25%;
     padding-top: 1px;   
     
+}
+
+.randomFact {
+    text-align: left;
+    width: 50%;
+    height: 20px;
+    display: contents;
 }
 
 .container1 {
