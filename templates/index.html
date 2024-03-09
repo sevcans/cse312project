@@ -1,0 +1,55 @@
+<!-- adding divs creates separation/new lines -->
+<html lang="en">
+<head>
+    <title>code crusaders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="static/style.css"/>    
+    
+</head>
+
+<body>
+
+
+<div class="header">
+    <div>
+        <h2>-<u>Code crusaders App</u>-</h2>    
+        <h3>Welcome to our app!</h3>       
+    </div>
+</div>
+<div class="v1"></div>
+<form action="/login" method="post" enctype="application/x-www-form-urlencoded"></form>
+    <div class="container1">        
+        <u><b>Sign-In</b></u>
+        <p></p>    
+        <label>Username:</label>
+        <input id="login-form-username" type="text" name="username_login" placeholder="Enter Username" required>
+        
+        <label>Password:&nbsp;</label>
+        <input id="login-form-pass" type="password" name="password_login" placeholder="Enter Password" required>
+        
+        <input type="submit" class="login-button" value="Log In">            
+    </div>
+</form>
+
+<form action="/register" method="post" enctype="application/x-www-form-urlencoded"></form>
+    <div class="container2">        
+        <u><b>Sign-Up</b></u>
+        <p>Complete this form to create an account.</p>
+            
+        <label>Email:</label>
+        <input id="sign-up-form-email" type="text" name="email_reg" placeholder="Enter Email"required>
+        
+        <label>Password:&nbsp;</label>
+        <input id="sign-up-form-pass" type="password" name="password_reg" placeholder="Enter Password" required>
+        
+        <label>Re-enter Password:&nbsp;</label>
+        <input id="sign-up-form-pass-retype" type="password" name="password_reg_retype" placeholder="Re-Enter Password" required>
+        <input type="submit" class="sign-up-button" value="Sign Up">            
+    </div>
+</form>
+<div class="image_div">
+    <img src="static/crusader.jpg" alt="It's acrusader" class="my_image"/>
+     
+</div> 
+</body>
+</html>
