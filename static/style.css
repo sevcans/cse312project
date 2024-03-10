@@ -13,18 +13,15 @@ body {
     box-sizing: border-box;
 }
 
-.my_image {
-    height: 100%;
+
+
+.crusader{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 39vh;
 }
 
-.image_div {
-    height: 80%;
-    width: 0;
-}
-
-img.post {
-    width: 120px;
-}
 
 /* .title {    
     
@@ -36,13 +33,11 @@ img.post {
 } */
 /* welcom/search for ... */
 .header {
-    
     background-color: #f1f1f1;
     text-align: center;
     /* height of this section */
     height: 25%;
     padding-top: 1px;   
-    
 }
 
 .randomFact {
@@ -52,7 +47,7 @@ img.post {
     display: contents;
 }
 
-.container1 {
+.LogIncontainer {
     padding: 20px;
     background-color: white;
     width: 40%;   
@@ -61,14 +56,11 @@ img.post {
     justify-content: left; */
     /* margin: auto;    */
 }
-.container2 {
+.RegisterContainer {
     padding: 20px;
     background-color: white;
     width: 40%;   
     float:right;
-    /* align-items: center;
-    justify-content: right; */
-      
 }
 input[type=text], input[type=password] {
     width: 100%;
@@ -84,15 +76,15 @@ input[type=text]:focus, input[type=password]:focus {
     outline: none;
   }
  
-.sign-up-button{
+.register-button{
     background-color: rgb(48, 170, 218);
     border: none;
     color: white;
     cursor: pointer;
     border-radius: 25px;
-    width: 100%;
-    height: 6%;
-    padding-top: 15px 20px;
+    width: 9vw;
+    height: 5vh;
+    font-size: 3vh;
 }
 .login-button{
     background-color: rgb(48, 170, 218);
@@ -100,17 +92,41 @@ input[type=text]:focus, input[type=password]:focus {
     color: white;
     cursor: pointer;
     border-radius: 25px;
-    width: 100%;
-    height: 6%;
-    padding-top: 15px 20px;
+    width: 7vw;
+    height: 5vh;
+    font-size: 3vh;
 }
-
-.v1 {
-    height: 500px;
+.Signup_font{
+    font-size: 3vh;
+}
+.Register_font{
+    font-size: 3vh;
+}
+.randomfactbutton{
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 20vw;
+    height: 5vh;
+    font-size: 2vh;
+}
+.Randomfacttext{
+    padding-bottom: 100%;
+}
+.logout{
     position: absolute;
-    left:50%;
-    margin-left: -3px;
-    top: 0;
-    border-left: 5px black;
+    bottom: 3vh;
+    left: 3vw;
 }
- 
+.logout-button{
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 10vw;
+    height: 5vh;
+    font-size: 3vh;
+}
