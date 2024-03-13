@@ -1,0 +1,139 @@
+.Battle_Title{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -2vh;
+}
+.Battle_arena_title{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 5vh;
+}
+.BattleButton{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4vw;
+    width: 10vw;
+    height: 4vh;
+    font-size: 2vh;
+    top: 11vh
+}
+.logout-button{
+    position: absolute;
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 6vw;
+    height: 4vh;
+    font-size: 2vh;
+    top: 6vh;
+    right: 2vw;
+}
+.DisplayUsername{
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    font-size: 2vh;
+    top: 0;
+    right: 2vw;
+}
+.Battle_Arena{
+    width: 65%;
+    height: 65%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.Bot{
+    position: absolute;
+    text-align: right;
+    width: 50%;
+    height: 100%;
+    bottom:0;
+    right: 0;
+}
+.Player{
+    position: absolute;
+    bottom:0;
+    width: 50%;
+    height: 100%;
+}
+.player_image{
+    position: absolute;
+    max-width: 40%;
+    height: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    top:7vh
+}
+.bot_image{
+    position: absolute;
+    max-width: 40%;
+    height: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    top:7vh
+}
+.result{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top:-4vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.Player_Username{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, Helvetica, sans-serif;
+}
+.Bot_Name{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, Helvetica, sans-serif;
+}
+.player_info{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom:8vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.bot_info{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom:8vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.option{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom:4%;
+}
+.attack_button{
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4vw;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2vh;
+}
+.defense_button{
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4vw;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2vh;
+}
