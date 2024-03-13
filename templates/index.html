@@ -1,61 +1,68 @@
 <!-- adding divs creates separation/new lines -->
 <html lang="en">
-<head>
-    <title>code crusaders</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="static/style.css"/>    
-    
-</head>
+    <head>
+        <title>code crusaders</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="static/style.css"/>    
+    </head>
 
-<body>
-
-
-<div class="header">
-    <div>
-        <h2>-<u>Code crusaders App</u>-</h2>    
-        <h3>Welcome to our app!</h3>
-        <div class="randomFact">
-            <button onclick="randomText()">Click for random Crusader fact!</button>
-            <p id="randomText"></p>
+    <body>
+        <div class="header">
+            <h2>-<u>Code crusaders App</u>-</h2>    
+            <h3>Welcome to our app!</h3>
+            <div>
+                <button onclick="randomText()" class ="randomfactbutton">Click for random Crusader fact!</button>
+                <p id="randomText" class="Randomfacttext"></p>
+            </div>    
         </div>
         
-    </div>
-</div>
-<div class="v1"></div>
-<form action="/login" method="post" enctype="application/x-www-form-urlencoded"></form>
-    <div class="container1">        
-        <u><b>Sign-In</b></u>
-        <p></p>    
-        <label>Username:</label>
-        <input id="login-form-username" type="text" name="username_login" placeholder="Enter Username" required>
-        
-        <label>Password:&nbsp;</label>
-        <input id="login-form-pass" type="password" name="password_login" placeholder="Enter Password" required>
-        
-        <input type="submit" class="login-button" value="Log In">            
-    </div>
-</form>
+        <div class="DisplayUsername">
+            <h3>{{UserName}}</h3>
+        </div>
 
-<form action="/register" method="post" enctype="application/x-www-form-urlencoded"></form>
-    <div class="container2">        
-        <u><b>Sign-Up</b></u>
-        <p>Complete this form to create an account.</p>
+        <div class="LogIncontainer">
+            <form action="/login" method="post" enctype="application/x-www-form-urlencoded">   
+                <u><b class = "Signup_font">Log-In</b></u>
+                <p></p>    
+                <label>Username:</label>
+                <input id="login-form-username" type="text" name="username_login" placeholder="Enter Username" required>
             
-        <label>Email:</label>
-        <input id="sign-up-form-email" type="text" name="email_reg" placeholder="Enter Email"required>
-        
-        <label>Password:&nbsp;</label>
-        <input id="sign-up-form-pass" type="password" name="password_reg" placeholder="Enter Password" required>
-        
-        <label>Re-enter Password:&nbsp;</label>
-        <input id="sign-up-form-pass-retype" type="password" name="password_reg_retype" placeholder="Re-Enter Password" required>
-        <input type="submit" class="sign-up-button" value="Sign Up">            
-    </div>
-</form>
-<div class="image_div">
-    <img src="static/crusader.jpg" alt="It's acrusader" class="my_image"/>
-     
-</div> 
-<script src="static/functions.js"></script>
-</body>
+                <label>Password:&nbsp;</label>
+                <input id="login-form-pass" type="password" name="password_login" placeholder="Enter Password" required>
+            
+                <input type="submit" class="login-button" value="Log In">            
+            </form>
+            <p>{{LoginMessage}}</p>
+        </div>
+
+        <div class="RegisterContainer">
+            <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
+                <u><b class = "Register_font">Register</b></u>
+                <p>Complete this form to create an account.</p>
+
+                <label>Email:</label>
+                <input id="sign-up-form-email" type="text" name="email_reg" placeholder="Enter Email"required>
+
+                <label>Password:&nbsp;</label>
+                <input id="sign-up-form-pass" type="password" name="password_reg" placeholder="Enter Password" required>
+
+                <label>Re-enter Password:&nbsp;</label>
+                <input id="sign-up-form-pass-retype" type="password" name="password_reg_retype" placeholder="Re-Enter Password" required>
+                <input type="submit" class="register-button" value="Register">  
+            </form>
+            <p>{{RegisterMessage}}</p>
+        </div>
+        <div class="logout">
+            <form action="/logout" method="post" enctype="application/x-www-form-urlencoded">
+                <input type="submit" class="logout-button" value="Log out"> 
+            </form>
+            <p>{{LogOutMessage}}</p>
+        </div>
+
+        <div class="crusader_image">
+            <img src="static/crusader.png" class="crusader"/>
+        </div> 
+
+        <script src="static/functions.js"></script>
+    </body>
 </html>
