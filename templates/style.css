@@ -13,13 +13,12 @@ body {
     box-sizing: border-box;
 }
 
-
-
 .crusader{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 39vh;
+    width: 16vw;
+    height: auto;
     bottom:20vh
 }
 
@@ -82,7 +81,7 @@ input[type=text]:focus, input[type=password]:focus {
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 25px;
+    border-radius: 2vw;
     width: 9vw;
     height: 5vh;
     font-size: 3vh;
@@ -92,7 +91,7 @@ input[type=text]:focus, input[type=password]:focus {
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 25px;
+    border-radius: 2vw;
     width: 7vw;
     height: 5vh;
     font-size: 3vh;
@@ -108,7 +107,7 @@ input[type=text]:focus, input[type=password]:focus {
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 25px;
+    border-radius: 2vw;
     width: 20vw;
     height: 5vh;
     font-size: 2vh;
@@ -126,7 +125,7 @@ input[type=text]:focus, input[type=password]:focus {
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 25px;
+    border-radius: 2vw;
     width: 10vw;
     height: 5vh;
     font-size: 3vh;

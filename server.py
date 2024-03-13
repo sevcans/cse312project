@@ -107,10 +107,11 @@ def Logout():
         return response
     
 @app.route("/battle/logout", methods=['POST'])
-def Logout():
+def BattleLogOUt():
     response = make_response(render_template('index.html', LogOutMessage="Logged Out"))
     response.set_cookie('auth', '', expires=0)
     return response
+
 # add n sniff after
 @app.after_request
 def add_nosniff(response):
