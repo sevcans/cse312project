@@ -1,0 +1,51 @@
+<!-- adding divs creates separation/new lines -->
+<html lang="en">
+    <head>
+        <title>Battle Arena</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="static/battle.css"/>    
+    </head>
+    <body>
+        <div class="Battle_Title">
+            <h2 class="Battle_arena_title">Battle Arena</h2>    
+            <div>
+                <button onclick="" class ="BattleButton">Click for a Battle</button>
+            </div>    
+        </div>
+
+        <div class="DisplayUsername">
+            <h3>{{UserName}}</h3>
+        </div>
+        
+        <div class="logout">
+            <form action="/battle/logout" method="post" enctype="application/x-www-form-urlencoded">
+                <input type="submit" class="logout-button" value="Log out"> 
+            </form>
+        </div>
+
+        <div class="Battle_Arena">
+
+            <div class="Player">
+                <h3 class="Player_Username">{{UserName}}</h3>
+                <img src="static/crusader.jpg" class="player_image" id="Player_Image_ID"/>
+                <h3 class="player_info">Hit Point: {{Player_HP}} Damage: {{Player_DMG}}</h3>
+            </div>
+
+            <div class="Bot">
+                <h3 class="Bot_Name">Bot</h3>
+                <img src="static/crusader.jpg" class="bot_image" id="Bot_Image_ID"/>
+                <h3 class="bot_info">Hit Point: {{Bot_HP}} Damage: {{Bot_DMG}}</h3>
+            </div>
+
+            <div class="result">
+                <h3>{{Result}}</h3>
+            </div>
+            <div class="option">
+                <button class="attack_button" onclick="">Attack</button>
+                <button class="defense_button" onclick="">Defend</button>
+            </div>
+        </div>
+
+        <script src="static/battle.js"></script>
+    </body>
+</html>
