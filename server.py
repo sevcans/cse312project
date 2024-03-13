@@ -20,6 +20,13 @@ def Saltgen(x):
     for i in range(x):
         chars += (random.choice(string))
     return chars
+#Generate a Cookie
+def Cookiegen(x):
+    string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    chars=""
+    for i in range(x):
+        chars += (random.choice(string))
+    return chars
 
 #when / is url returns index.html contents as home page and also calls on css/js files
 @app.route("/", methods=['GET'])
@@ -43,8 +50,7 @@ def register():
     #Generate user info
     salt = Saltgen(16)
     hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
-    token = hashlib.sha256((username + salt).encode('utf-8')).hexdigest()
-    user_info = {"username" : username, "password": hashpass,"salt":salt, "aut_token": token}
+    user_info = {"username" : username, "password": hashpass,"salt": salt, "aut_token": ''}
     #Insert in DB
     userdata.insert_one(user_info)
     return render_template('index.html', RegisterMessage="Registration Successful")
@@ -58,12 +64,15 @@ def login():
     #Search database
     if userdata.find_one({"username": username}):
        authpass = userdata.find_one({"username": username})['password']
+       name = userdata.find_one({"username": username})['username']
        salt = userdata.find_one({"username": username})['salt']
-       token = userdata.find_one({"username": username})['aut_token']
+       token = Cookiegen(50)
        hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
+       auth = hashlib.sha256((token).encode('utf-8')).hexdigest()
        if authpass == hashpass:
-        response = make_response(render_template('index.html', LoginMessage="Login Successful"))
-        response.set_cookie('auth', str(token), httponly=True, max_age=7200)
+        userdata.update_one({"username": username},{"$set": {"aut_token": auth}})
+        response = make_response(render_template('battle.html', UserName = name))
+        response.set_cookie('auth', token, httponly=True, max_age=7200)
         return response
        else:
            return render_template('index.html', LoginMessage="Password or Username Incorrect")
@@ -73,11 +82,20 @@ def login():
 #LogOut
 @app.route("/logout", methods=['POST'])
 def Logout():
+    if 'auth' in request.cookies:
+        response = render_template('index.html', LogOutMessage="You haven't logged in")
+        return response
+    else:
+        response = make_response(render_template('index.html', LogOutMessage="Logged Out"))
+        response.set_cookie('auth', '', expires=0)
+        return response
+    
+@app.route("/battle/logout", methods=['POST'])
+def Logout():
     response = make_response(render_template('index.html', LogOutMessage="Logged Out"))
     response.set_cookie('auth', '', expires=0)
     return response
-
-# add no sniff after
+# add n sniff after
 @app.after_request
 def add_nosniff(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'    
