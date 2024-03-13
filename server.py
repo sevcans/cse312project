@@ -27,6 +27,20 @@ def Cookiegen(x):
     for i in range(x):
         chars += (random.choice(string))
     return chars
+#Generate a Cookie
+def Cookiegen(x):
+    string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    chars=""
+    for i in range(x):
+        chars += (random.choice(string))
+    return chars
+#Generate a Cookie
+def Cookiegen(x):
+    string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-=_+{}[]|\:;?/<>,."
+    chars=""
+    for i in range(x):
+        chars += (random.choice(string))
+    return chars
 
 #when / is url returns index.html contents as home page and also calls on css/js files
 @app.route("/", methods=['GET'])
@@ -51,6 +65,7 @@ def register():
     salt = Saltgen(16)
     hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
     user_info = {"username" : username, "password": hashpass,"salt": salt, "aut_token": ''}
+    user_info = {"username" : username, "password": hashpass,"salt": salt, "aut_token": ''}
     #Insert in DB
     userdata.insert_one(user_info)
     return render_template('index.html', RegisterMessage="Registration Successful")
@@ -64,6 +79,7 @@ def login():
     #Search database
     if userdata.find_one({"username": username}):
        authpass = userdata.find_one({"username": username})['password']
+       name = userdata.find_one({"username": username})['username']
        name = userdata.find_one({"username": username})['username']
        salt = userdata.find_one({"username": username})['salt']
        token = Cookiegen(50)
