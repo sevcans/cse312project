@@ -1,10 +1,10 @@
 <html lang="en">
-    <head onload="find_battle()">
+    <head>
         <title>Battle Arena</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="static/battle.css"/>    
     </head>
-    <body>
+    <body  onload="find_battle()">
         <div class="Battle_Title">
             <h2 class="Battle_arena_title">Battle Arena</h2>    
             <div>
@@ -25,21 +25,29 @@
             <div class="Player">
                 <h3 class="Player_Username" id="UserName"></h3>
                 <img src="" class="player_image" id="Player_Image_ID"/>
-                <h3 class="player_info" id="player_info"></h3>
+                <div class="player_info">
+                    <h3 class="player_hp_info" id="player_hp_info"></h3>
+                    <h3 class="player_dmg_info" id="player_dmg_info"></h3>
+                </div>
             </div>
 
             <div class="Bot">
                 <h3 class="Bot_Name" id="BotName"></h3>
                 <img src="" class="bot_image" id="Bot_Image_ID"/>
-                <h3 class="bot_info" id="bot_info"></h3>
+
+                <div class="bot_info">
+                    <h3 class="bot_hp_info" id="bot_hp_info"></h3>
+                    <h3 class="bot_dmg_info" id="bot_dmg_info"></h3>
+                </div>
+
             </div>
 
             <div class="result">
                 <h3 id="Result"></h3>
             </div>
             <div class="option">
-                <button class="attack_button" onclick="attack()">Attack</button>
-                <button class="defense_button" onclick="defend()">Defend</button>
+                <button class="attack_button" id="attack_button" onclick="attack()" style="display: none;">Attack</button>
+                <button class="defense_button" id="defense_button" onclick="defend()" style="display: none;">Defend</button>
             </div>
         </div>
 

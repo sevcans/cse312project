@@ -26,20 +26,20 @@ def Saltgen(x):
 
 #Battle Gen
 def Characer_Gen():
-    character = {"player1": {"Health": 10, "Damage": 5, "image": "static/image/1.jpg"},
-                 "player2": {"Health": 10, "Damage": 5, "image": "static/image/2.jpg"},
-                 "player3": {"Health": 10, "Damage": 5, "image": "static/image/3.jpg"},
-                 "player4": {"Health": 10, "Damage": 5, "image": "static/image/4.jpg"},
-                 "player5": {"Health": 10, "Damage": 5, "image": "static/image/5.jpg"},
-                 "player6": {"Health": 10, "Damage": 5, "image": "static/image/6.jpg"},
-                 "player7": {"Health": 10, "Damage": 5, "image": "static/image/7.jpg"},
-                 "player8": {"Health": 10, "Damage": 5, "image": "static/image/8.jpg"},
-                 "player9": {"Health": 10, "Damage": 5, "image": "static/image/9.jpg"},
-                 "player10": {"Health": 10, "Damage": 5, "image": "static/image/10.jpg"},
-                 "player11": {"Health": 10, "Damage": 5, "image": "static/image/11.jpg"},
-                 "player12": {"Health": 10, "Damage": 5, "image": "static/image/12.jpg"},
-                 "player14": {"Health": 10, "Damage": 5, "image": "static/image/13.jpg"},
-                 "player14": {"Health": 10, "Damage": 5, "image": "static/image/14.jpg"},
+    character = {"player1": {"Health": 10, "Damage": 5, "image": "static/crusader.jpg"},
+                #  "player2": {"Health": 10, "Damage": 5, "image": "static/image/2.jpg"},
+                #  "player3": {"Health": 10, "Damage": 5, "image": "static/image/3.jpg"},
+                #  "player4": {"Health": 10, "Damage": 5, "image": "static/image/4.jpg"},
+                #  "player5": {"Health": 10, "Damage": 5, "image": "static/image/5.jpg"},
+                #  "player6": {"Health": 10, "Damage": 5, "image": "static/image/6.jpg"},
+                #  "player7": {"Health": 10, "Damage": 5, "image": "static/image/7.jpg"},
+                #  "player8": {"Health": 10, "Damage": 5, "image": "static/image/8.jpg"},
+                #  "player9": {"Health": 10, "Damage": 5, "image": "static/image/9.jpg"},
+                #  "player10": {"Health": 10, "Damage": 5, "image": "static/image/10.jpg"},
+                #  "player11": {"Health": 10, "Damage": 5, "image": "static/image/11.jpg"},
+                #  "player12": {"Health": 10, "Damage": 5, "image": "static/image/12.jpg"},
+                #  "player14": {"Health": 10, "Damage": 5, "image": "static/image/13.jpg"},
+                #  "player14": {"Health": 10, "Damage": 5, "image": "static/image/14.jpg"},
                  }
     return random.choice(list(character.values()))
 
@@ -114,7 +114,9 @@ def login():
 @app.route("/find_battle", methods=['POST'])
 def findbattle():
     if 'auth' in request.cookies and battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        data = battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        data = battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
+        return jsonify({'message': 'Battle Found',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
+                "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]})
     else:
         return jsonify({'message': 'No battles found'})
     
@@ -123,7 +125,7 @@ def generateBattle():
     if 'auth' in request.cookies and battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
         data = battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
         print(data["player_image"])
-        return jsonify({'message': 'There a Battle Ongoing',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
+        return jsonify({'message': 'Ongoing Battle',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
                 "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]})
     else:
         player_name = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
