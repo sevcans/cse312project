@@ -98,6 +98,9 @@ input[type=text]:focus, input[type=password]:focus {
     height: 5vh;
     font-size: 3vh;
 }
+.login-button:hover{
+    cursor: pointer;
+}
 .Signup_font{
     font-size: 3vh;
 }
@@ -113,6 +116,9 @@ input[type=text]:focus, input[type=password]:focus {
     width: 20vw;
     height: 5vh;
     font-size: 2vh;
+}
+.randomfactbutton:hover{
+    cursor: pointer;
 }
 .Randomfacttext{
     padding-bottom: 100%;
@@ -132,8 +138,6 @@ input[type=text]:focus, input[type=password]:focus {
     height: 5vh;
     font-size: 3vh;
 }
-.DisplayUsername{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+.logout-button:hover{
+    cursor: pointer;
 }

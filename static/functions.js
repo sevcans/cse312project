@@ -16,10 +16,12 @@ function randomText() {
 }
 
 async function register(){
+  //getting credentials
   var user = document.getElementById('sign-up-form-email').value
   var password = document.getElementById('sign-up-form-pass').value
   var pass_retype = document.getElementById('sign-up-form-pass-retype').value
 
+  //making request
   const response = await fetch("/register",{
     method: "POST",
     headers: {
@@ -32,18 +34,25 @@ async function register(){
       "retype": pass_retype
     })
   });
+
+  //display message
   const content = await response.json();
   document.getElementById('Register_Message').textContent = content.message;
+
+  // Reseting Input 
   if (content.message == "Registration successful" ){
     document.getElementById("sign-up-form-email").value = "";
     document.getElementById("sign-up-form-pass").value = "";
     document.getElementById("sign-up-form-pass-retype").value = "";
   };
 }
+
 async function Login(){
+  //getting credentials
   var user = document.getElementById('login-form-username').value
   var password = document.getElementById('login-form-pass').value
 
+  //making request
   const response = await fetch("/login",{
     method: "POST",
     headers: {
@@ -55,12 +64,16 @@ async function Login(){
       "password":password,
     })
   });
+  //display message
   const content = await response.json();
   document.getElementById('LoginMessage').textContent = content.message;
+
+  //redirect
   if (content.message == 'Login successful'){
     window.location.replace("/battle");
   }
 }
+
 async function logout(){
   const response = await fetch("/logout",{
     method: "POST",
@@ -70,5 +83,9 @@ async function logout(){
     },
   });
   const content = await response.json();
-  document.getElementById('LogOutMessage').textContent = content.message;
+  console.log(response.json.message)
+  if (content.message == 'Logged Out Successful'){
+    window.location.replace("/");
+    document.getElementById('LogOutMessage').textContent = content.message;
+  }
 }
