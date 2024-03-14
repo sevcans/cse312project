@@ -76,15 +76,17 @@ input[type=text]:focus, input[type=password]:focus {
     outline: none;
   }
  
-.register-button{
+.register_button{
     background-color: rgb(48, 170, 218);
     border: none;
     color: white;
-    cursor: pointer;
     border-radius: 2vw;
     width: 9vw;
     height: 5vh;
     font-size: 3vh;
+}
+.register_button:hover{
+    cursor: pointer;
 }
 .login-button{
     background-color: rgb(48, 170, 218);

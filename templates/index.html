@@ -1,4 +1,3 @@
-<!-- adding divs creates separation/new lines -->
 <html lang="en">
     <head>
         <title>code crusaders</title>
@@ -17,42 +16,32 @@
         </div>
 
         <div class="LogIncontainer">
-            <form action="/login" method="post" enctype="application/x-www-form-urlencoded">   
-                <u><b class = "Signup_font">Log-In</b></u>
-                <p></p>    
-                <label>Username:</label>
-                <input id="login-form-username" type="text" name="username_login" placeholder="Enter Username" required>
-            
-                <label>Password:&nbsp;</label>
-                <input id="login-form-pass" type="password" name="password_login" placeholder="Enter Password" required>
-            
-                <input type="submit" class="login-button" value="Log In">            
-            </form>
-            <p>{{LoginMessage}}</p>
+            <u><b class = "Signup_font">Log-In</b></u>
+            <p></p>    
+            <label>Username:</label>
+            <input id="login-form-username" type="text" placeholder="Enter Username">
+            <label>Password:&nbsp;</label>
+            <input id="login-form-pass" type="password" placeholder="Enter Password">
+            <button onclick="Login()" class="login-button">Log In</button>     
+            <h4 id ="LoginMessage"></h4>
         </div>
 
         <div class="RegisterContainer">
-            <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
-                <u><b class = "Register_font">Register</b></u>
-                <p>Complete this form to create an account.</p>
-
-                <label>Email:</label>
-                <input id="sign-up-form-email" type="text" name="email_reg" placeholder="Enter Email"required>
-
-                <label>Password:&nbsp;</label>
-                <input id="sign-up-form-pass" type="password" name="password_reg" placeholder="Enter Password" required>
-
-                <label>Re-enter Password:&nbsp;</label>
-                <input id="sign-up-form-pass-retype" type="password" name="password_reg_retype" placeholder="Re-Enter Password" required>
-                <input type="submit" class="register-button" value="Register">  
-            </form>
-            <p>{{RegisterMessage}}</p>
+            <u><b class = "Register_font">Register</b></u>
+            <p>Complete this form to create an account.</p>
+            <label>Email:</label>
+            <input id="sign-up-form-email" type="text"  placeholder="Enter Email">
+            <label>Password:&nbsp;</label>
+            <input id="sign-up-form-pass" type="password" placeholder="Enter Password" >
+            <label>Re-enter Password:&nbsp;</label>
+            <input id="sign-up-form-pass-retype" type="password" placeholder="Re-Enter Password">
+            <button onclick="register()" class="register_button">Register</button>
+            <h4 id ="Register_Message"></h4>
         </div>
+        
         <div class="logout">
-            <p>{{LogOutMessage}}</p>
-            <form action="/logout" method="post" enctype="application/x-www-form-urlencoded">
-                <input type="submit" class="logout-button" value="Log out"> 
-            </form>
+            <h4 id ="LogOutMessage"></h4>
+            <button onclick="logout()" class="logout-button">Log out</button>
         </div>
 
         <div class="crusader_image">

@@ -15,3 +15,60 @@ function randomText() {
     document.getElementById("randomText").innerHTML = "<br/>"+randomCrusaderStuff[Math.floor(Math.random()*9)]
 }
 
+async function register(){
+  var user = document.getElementById('sign-up-form-email').value
+  var password = document.getElementById('sign-up-form-pass').value
+  var pass_retype = document.getElementById('sign-up-form-pass-retype').value
+
+  const response = await fetch("/register",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      'X-Content-Type-Options': 'nosniff'
+    },
+    body: JSON.stringify({
+      "username":user,
+      "password":password,
+      "retype": pass_retype
+    })
+  });
+  const content = await response.json();
+  document.getElementById('Register_Message').textContent = content.message;
+  if (content.message == "Registration successful" ){
+    document.getElementById("sign-up-form-email").value = "";
+    document.getElementById("sign-up-form-pass").value = "";
+    document.getElementById("sign-up-form-pass-retype").value = "";
+  };
+}
+async function Login(){
+  var user = document.getElementById('login-form-username').value
+  var password = document.getElementById('login-form-pass').value
+
+  const response = await fetch("/login",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      'X-Content-Type-Options': 'nosniff'
+    },
+    body: JSON.stringify({
+      "username":user,
+      "password":password,
+    })
+  });
+  const content = await response.json();
+  document.getElementById('LoginMessage').textContent = content.message;
+  if (content.message == 'Login successful'){
+    window.location.replace("/battle");
+  }
+}
+async function logout(){
+  const response = await fetch("/logout",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      'X-Content-Type-Options': 'nosniff'
+    },
+  });
+  const content = await response.json();
+  document.getElementById('LogOutMessage').textContent = content.message;
+}
