@@ -1,0 +1,44 @@
+<!-- adding divs creates separation/new lines -->
+<html lang="en">
+<head>
+    <title>code crusaders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/home.css"/>    
+    
+</head>
+
+<body>
+
+<div class="header">   
+     
+    <h2>-<u>Code crusaders App</u>-</h2>               
+    <div class="DisplayUsername">
+        <h3>{{UserName}}</h3>
+    </div>
+</div>
+<div class="crusader">
+    <img src="/public/image/crusader.jpg" alt="It's a crusader " class="crusader_image"/>
+<div class ="contents">
+    <div class="chat">
+
+        <div id="chat-messages">
+        </div>
+
+        <div class="chat-form">
+            <hr>
+            <label>
+                Chat:
+                <input id="chat-text-box" type="text">
+            </label>
+            <button id="chat-button" onclick="sendChat()">Send</button>
+        </div>
+
+    </div>
+    <button onclick="battle()" class="battle-button">Battle</button>  
+    <div class="crusader">
+        <img src="/static/crusader.jpg" class="crusader_image"/>        
+    </div>
+</div> 
+    <script src="static/functions.js"></script>
+</body>
+</html>

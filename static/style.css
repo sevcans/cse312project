@@ -19,7 +19,8 @@ body {
     transform: translateX(-50%);
     width: 16vw;
     height: auto;
-    bottom:20vh
+    bottom:20vh;
+    opacity: .5;
 }
 
 
