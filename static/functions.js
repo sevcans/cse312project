@@ -70,7 +70,7 @@ async function Login(){
 
   //redirect
   if (content.message == 'Login successful'){
-    window.location.replace("/battle");
+    window.location.replace("/home");
   }
 }
 
@@ -88,4 +88,8 @@ async function logout(){
     window.location.replace("/");
     document.getElementById('LogOutMessage').textContent = content.message;
   }
+}
+
+async function battle(){
+  window.location.replace("/battle")  
 }
