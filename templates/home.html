@@ -1,7 +1,7 @@
 <!-- adding divs creates separation/new lines -->
 <html lang="en">
 <head>
-    <title>code crusaders</title>
+    <title>Code Crusaders</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/static/home.css"/>    
     
@@ -9,36 +9,40 @@
 
 <body>
 
-<div class="header">   
-     
-    <h2>-<u>Code crusaders App</u>-</h2>               
-    <div class="DisplayUsername">
-        <h3>{{UserName}}</h3>
-    </div>
-</div>
-<div class="crusader">
-    <img src="/public/image/crusader.jpg" alt="It's a crusader " class="crusader_image"/>
-<div class ="contents">
-    <div class="chat">
-
-        <div id="chat-messages">
+    <div class="header">
+                
+        <h2>-<u>Code crusaders App</u>-</h2>
+        <div class="crusader-fact">
+            <button onclick="randomText()" class ="randomfactbutton">Click for random Crusader fact!</button>
+            <p id="randomText" class="Randomfacttext"></p>
+        </div>    
+        <div class="DisplayUsername">
+            <h3>{{UserName}}</h3>        
         </div>
-
-        <div class="chat-form">
-            <hr>
-            <label>
-                Chat:
-                <input id="chat-text-box" type="text">
-            </label>
-            <button id="chat-button" onclick="sendChat()">Send</button>
+        <div class="profile_thumbnail">
+                <img id="profileImage" src="static/crusader.jpg"  class="profile_image"/>
+        </div>    
+        <div>
+            <button onclick="battle()" class="battle-button">Battle</button>
         </div>
-
+            
     </div>
-    <button onclick="battle()" class="battle-button">Battle</button>  
-    <div class="crusader">
-        <img src="/static/crusader.jpg" class="crusader_image"/>        
+    <div class="userListContainer">
+        <u><b>User List</b></u>
+    </div>   
+    <div class="Contents">        
+        <div class="chat-form">                    
+            <button id="chat-button" onclick="sendChat()">Send Message </button>
+            <input id="chat-text-box" type="text" size="50" placeholder="Send a Message">
+            <br>
+            <button id="battle-button" onclick="requestBattle()">Request Battle</button>
+            <input id="battle-chat-text-box" type="text" size="50" placeholder="@ someone">
+        </div>  
     </div>
-</div> 
+    <div class="logout">
+        <button onclick="logout()" class="logout-button">Log out</button>
+        
+    </div>
     <script src="static/functions.js"></script>
 </body>
 </html>
