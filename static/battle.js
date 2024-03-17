@@ -69,3 +69,6 @@ async function generate_battle(){
         }, 3500);
     }
 }
+async function home(){
+    window.location.replace("/home")  
+  }
