@@ -150,3 +150,16 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: 2vh;
 }
+.home-button{
+    position: fixed;
+    background-color: rgb(30, 214, 24);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 6vw;
+    height: 4vh;
+    font-size: 2vh;
+    bottom: 6vh;
+    right: 2vw;
+}

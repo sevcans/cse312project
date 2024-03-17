@@ -19,10 +19,13 @@ body {
     transform: translateX(-50%);
     width: 16vw;
     height: auto;
-    bottom:20vh
+    bottom:20vh;
+    opacity: .5;
 }
 
-
+.error{
+    color: #ff0000;
+}
 /* .title {    
     
     height: 5%;
@@ -122,6 +125,7 @@ input[type=text]:focus, input[type=password]:focus {
 }
 .Randomfacttext{
     padding-bottom: 100%;
+    font-size: 1vh;
 }
 .logout{
     position: absolute;

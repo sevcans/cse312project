@@ -159,6 +159,13 @@ def Logout():
         response.set_cookie('auth', '', expires=0)
         return response
 
+@app.route("/home", methods=['GET'])
+def homePage():
+    #Checks Cookie and Auth if user exist
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+        return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+    else:
+        return redirect('/')
 # add n sniff after
 @app.after_request
 def add_nosniff(response):
