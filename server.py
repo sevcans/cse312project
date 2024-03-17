@@ -14,7 +14,9 @@ app.config['DEBUG'] = True
 client = MongoClient("Server312",27017)
 db = client["312Db"]
 userdata = db["UserData"]
-battledata = db["BattleArena"]
+singlebattle = db["Single_Arena"]
+c_list = db["Challenger_List"]
+multibattle = db["Multi_Arena"]
 
 #Generate a Salt
 def Saltgen(x):
@@ -54,6 +56,14 @@ def BattlePage():
     #Checks Cookie and Auth if user exist
     if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
         return render_template('battle.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+    else:
+        return redirect('/')
+
+@app.route("/multi", methods=['GET'])
+def MultiPage():
+    #Checks Cookie and Auth if user exist
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+        return render_template('multi.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
     else:
         return redirect('/')
 
@@ -113,8 +123,8 @@ def login():
 # Find a ongoing battle
 @app.route("/find_battle", methods=['POST'])
 def findbattle():
-    if 'auth' in request.cookies and battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        data = battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
+    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
         return jsonify({'message': 'Battle Found',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
                 "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]})
     else:
@@ -122,8 +132,8 @@ def findbattle():
     
 @app.route("/gen_battle", methods=['POST'])
 def generateBattle():
-    if 'auth' in request.cookies and battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        data = battledata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
+    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
         print(data["player_image"])
         return jsonify({'message': 'Ongoing Battle',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
                 "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]})
@@ -133,7 +143,7 @@ def generateBattle():
         bot = Characer_Gen()
         data_db = {"player_image": player['image'],"player_health":player['Health'],"player_damage":player['Damage'],"player_name": player_name,
                 "bot_image":bot['image'],"bot_health":bot['Health'],"bot_damage":bot['Damage'],"bot_name": "Bot Bob"}
-        battledata.insert_one({"battledata":data_db, "auth_token":hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        singlebattle.insert_one({"battledata": data_db, "auth_token":hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
         return jsonify({'message': 'message": "Get Ready For War', "player_image": player['image'],"player_health":player['Health'],"player_damage":player['Damage'],"player_name": player_name,
                 "bot_image":bot['image'],"bot_health":bot['Health'],"bot_damage":bot['Damage'],"bot_name": "Bot Bob"
                 })
