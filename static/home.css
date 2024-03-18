@@ -45,7 +45,6 @@ body {
     /* padding-top:120px; */
 }
 .battle-button{
-    
     position: absolute;
     background-color: rgb(48, 170, 218);
     border: none;
@@ -105,5 +104,3 @@ body {
     overflow: scroll;
     top:21vh;
 }
-
- 

@@ -28,7 +28,7 @@ def Saltgen(x):
 
 #Battle Gen
 def Characer_Gen():
-    character = {"player1": {"Health": 10, "Damage": 5, "image": "static/crusader.jpg"},
+    character = {"player1": {"Health": 100, "Damage": 8, "image": "static/crusader.png"},
                 #  "player2": {"Health": 10, "Damage": 5, "image": "static/image/2.jpg"},
                 #  "player3": {"Health": 10, "Damage": 5, "image": "static/image/3.jpg"},
                 #  "player4": {"Health": 10, "Damage": 5, "image": "static/image/4.jpg"},
@@ -67,6 +67,14 @@ def MultiPage():
     else:
         return redirect('/')
 
+@app.route("/home", methods=['GET'])
+def homePage():
+    #Checks Cookie and Auth if user exist
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+        return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+    else:
+        return redirect('/')
+
 #Register for an account
 @app.route("/register", methods=['POST'])
 def register():
@@ -92,6 +100,7 @@ def register():
     #Insert in DB
     userdata.insert_one(user_info)
     return jsonify({'message': 'Registration successful'})
+
 #Login
 @app.route("/login", methods=['POST'])
 def login():
@@ -124,29 +133,94 @@ def login():
 @app.route("/find_battle", methods=['POST'])
 def findbattle():
     if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
-        return jsonify({'message': 'Battle Found',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
-                "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]})
+        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        return jsonify({'message': 'Battle Found',
+                        "player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
+                        "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]
+                        })
     else:
         return jsonify({'message': 'No battles found'})
-    
+
+# Generate a Battle
 @app.route("/gen_battle", methods=['POST'])
 def generateBattle():
+    # check to see if battle exist
     if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['battledata']
-        print(data["player_image"])
+        # find the battle
+        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        # return battle data
         return jsonify({'message': 'Ongoing Battle',"player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
                 "bot_image":data['bot_image'],"bot_health":data['bot_health'],"bot_damage":data['bot_damage'],"bot_name": data["bot_name"]})
     else:
+        # create battle 
         player_name = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+        # get characters object
         player = Characer_Gen()
         bot = Characer_Gen()
-        data_db = {"player_image": player['image'],"player_health":player['Health'],"player_damage":player['Damage'],"player_name": player_name,
-                "bot_image":bot['image'],"bot_health":bot['Health'],"bot_damage":bot['Damage'],"bot_name": "Bot Bob"}
-        singlebattle.insert_one({"battledata": data_db, "auth_token":hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
-        return jsonify({'message': 'message": "Get Ready For War', "player_image": player['image'],"player_health":player['Health'],"player_damage":player['Damage'],"player_name": player_name,
+        # create battle data
+        # store battle data
+        singlebattle.insert_one({"player_image": player['image'],"player_health":player['Health'],"player_damage":player['Damage'],"player_name": player_name,
+                "bot_image":bot['image'],"bot_health": bot['Health'],"bot_damage": bot['Damage'],"bot_name": "Bot Bob", 
+                "match_mess": "Get Ready For War", "auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        # return battle data
+        return jsonify({"player_image": player['image'],"player_health":player['Health'],"player_damage":player['Damage'],"player_name": player_name,
                 "bot_image":bot['image'],"bot_health":bot['Health'],"bot_damage":bot['Damage'],"bot_name": "Bot Bob"
                 })
+
+# Generate a Battle
+@app.route("/update_single_battle", methods=['POST'])
+def updateBattle_single():
+    # find battle data
+    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+        data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        if data['bot_health'] <= 0:
+            singlebattle.delete_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+            return jsonify({"bot_health":data['bot_health'], "player_health":data['player_health'],"mess":"You Win"})
+        elif data['player_health'] <= 0:
+            singlebattle.delete_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+            return jsonify({"bot_health":data['bot_health'], "player_health":data['player_health'],"mess":"You Lose, Bot Win"})
+        else:
+            return jsonify({"bot_health":data['bot_health'], "player_health":data['player_health'],"mess":"Battle"})
+
+    else:
+        return jsonify({"mess":"No Battle"})
+
+@app.route("/single_battle_gameplay", methods=['POST'])
+def SingleBattleGameplay():
+    data = request.get_json()
+    input = data.get('input')
+    match_data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+    num= random.randint(0,1)
+    # input options
+    if input == "attack":
+        # defense if less than 50
+        if num == 0:
+            bot_health = match_data['bot_health'] - (match_data['player_damage']/2)
+            if bot_health <= 0:
+                bot_health = 0
+            singlebattle.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"bot_health":bot_health}})
+            return jsonify({"message": "You attacked, Bot Defended"})
+        # attack if greater than 50 
+        elif num == 1:
+            bot_health = match_data['bot_health'] - match_data['player_damage']
+            player_health = match_data['player_health'] - match_data['bot_damage']
+            if bot_health <= 0:
+                bot_health = 0
+            if player_health <= 0:
+                player_health = 0
+            singlebattle.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set": {"bot_health":bot_health, "player_health":player_health}})
+            return jsonify({"message": "You attacked, Bot Attacked"})
+    elif input == "defend":
+        # attack if greater than 50 
+        if num == 1:
+            player_health = match_data['player_health'] - (match_data['bot_damage']/2)
+            # Check if health is less than 0
+            if player_health <= 0:
+                player_health = 0
+            singlebattle.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"player_health":player_health}})
+            return jsonify({"message": "You Defendded, Bot Attacked"})
+        else:
+            return jsonify({"message": "You Defendded, Bot Defended"})
 
 #LogOut
 @app.route("/logout", methods=['POST'])
@@ -158,14 +232,7 @@ def Logout():
         response = make_response(jsonify({'message': 'Logged Out Successful'}))
         response.set_cookie('auth', '', expires=0)
         return response
-
-@app.route("/home", methods=['GET'])
-def homePage():
-    #Checks Cookie and Auth if user exist
-    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
-    else:
-        return redirect('/')
+    
 # add n sniff after
 @app.after_request
 def add_nosniff(response):
