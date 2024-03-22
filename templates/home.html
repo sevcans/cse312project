@@ -7,14 +7,14 @@
     
 </head>
 
-<body>
+<body onload="welcome();">
 
     <div class="header">
                 
         <h2>-<u>Code crusaders App</u>-</h2>
         <div class="crusader-fact">
             <button onclick="randomText()" class ="randomfactbutton">Click for random Crusader fact!</button>
-            <p id="randomText" class="Randomfacttext"></p>
+            <p id="randomText" class="Randomfacttext" placeholder="fact"></p>
         </div>    
         <div class="DisplayUsername">
             <h3>{{UserName}}</h3>        
@@ -29,10 +29,13 @@
     </div>
     <div class="userListContainer">
         <u><b>User List</b></u>
+        <!-- <h4><small>{{userList}}</small></h4> -->
+        <div id="userList"></div>
     </div>   
-    <div class="Contents">        
+    <div class="Contents">  
+        <div id="chat-messages"></div>      
         <div class="chat-form">                    
-            <button id="chat-button" onclick="sendChat()">Send Message </button>
+            <button id="chat-button" onclick="sendChat()">Send Message</button>
             <input id="chat-text-box" type="text" size="50" placeholder="Send a Message">
             <br>
             <button id="battle-button" onclick="requestBattle()">Request Battle</button>
@@ -43,6 +46,7 @@
         <button onclick="logout()" class="logout-button">Log out</button>
         
     </div>
-    <script src="static/functions.js"></script>
+    <!-- <script src="static/functions.js"></script> -->
+    <script src="static/home.js"></script>
 </body>
 </html>
