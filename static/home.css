@@ -106,4 +106,13 @@ body {
     top:21vh;
 }
 
+#chat-messages{
+    height:90%;
+    overflow: scroll;
+    color:black;
+}
+#battle-messages{
+    height:90%;
+    overflow: scroll;
+}
  
