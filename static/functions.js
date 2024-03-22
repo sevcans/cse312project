@@ -93,9 +93,3 @@ async function logout(){
 async function battle(){
   window.location.replace("/battle")  
 }
-async function sendChat(){
-  
-}
-async function requestBattle(){
-
-}

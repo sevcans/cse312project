@@ -31,19 +31,31 @@ function addUserToList(userJSON) {
     user.scrollTop = user.scrollHeight - user.clientHeight;
 }
 // 
-function updateUserList() {
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {            
-            const users = JSON.parse(this.response);
-            for (const user of users) {
-                addUserToList(user);
-            }
+async function updateUserList() {
+
+    const response = await fetch("/userList",{
+        method: "GET",
+        headers:{
+            "Content-Type": "application/json",
+            'X-Content-Type-Options': 'nosniff'
+          }});
+        
+        const content = await response.json();
+        for(const user of content){
+            addUserToList(user);
         }
-    }
-    // send get request to userList
-    request.open("GET", "/userList");
-    request.send();
+    // const request = new XMLHttpRequest();
+    // request.onreadystatechange = function () {
+    //     if (this.readyState === 4 && this.status === 200) {            
+    //         const users = JSON.parse(this.response);
+    //         for (const user of users) {
+    //             addUserToList(user);
+    //         }
+    //     }
+    // }
+    // // send get request to userList
+    // request.open("GET", "/userList");
+    // request.send();
 }
 
 function welcome() {
@@ -62,8 +74,9 @@ function welcome() {
 function chatMessageHTML(messageJSON) {
     const username = messageJSON.username;
     const message = messageJSON.message;
-    // const messageId = messageJSON.id;
-    messageHTML = "<span id='message'><b>" + username + "</b>: " + message + "</span>";
+    let messageHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
+    messageHTML += "<span id='userName' >" + username + ":"+ message+"</span>";
+    // messageHTML = "<span id='message'>" + username + "</b>: " + message + "</span>";
     return messageHTML;
 }
 function addMessageToChat(messageJSON) {
@@ -85,29 +98,42 @@ async function  sendChat(){
             body: JSON.stringify({'message': chatTextBox
         })
     });
-    const message = await response.json();
-    document.getElementById('chat-messages') = message.message;
-    document.getElementById("chat-text-box").value ="";
-    // if(message.message == "Message Posted"){
-    //     document.getElementById("chat-text-box").value ="";
-    // };
+    const content = await response.json();
+    document.getElementById('chat-messages') = content.message;
+    // document.getElementById("chat-text-box").value ="";
+    if(content.message == "posted"){
+        document.getElementById("chat-text-box").value ="";
+    };
     chatTextBox.focus();
 }
 
-function updateChat() {
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            clearChat()
-            const messages = JSON.parse(this.response);
-            for (const message of messages) {
-                addMessageToChat(message);
-            }
+async function updateChat() {
+    // const request = new XMLHttpRequest();
+    // request.onreadystatechange = function () {
+    //     if (this.readyState === 4 && this.status === 200) {
+    //         clearChat()
+    //         const messages = JSON.parse(this.response);
+    //         for (const message of messages) {
+    //             addMessageToChat(message);
+    //         }
+    //     }
+    // }
+    // request.open("GET", "/chat-messages");
+    // request.send();
+    const response = await fetch("/chat-messages",{
+        method: "GET",
+        headers:{
+            "Content-Type": "application/json",
+            'X-Content-Type-Options': 'nosniff'
+          }});
+        clearChat();
+        const content = await response.json();
+        for(const message of content){
+        addMessageToChat(message);
         }
-    }
-    request.open("GET", "/chat-messages");
-    request.send();
+
 }
+
 function clearChat() {
     const chatMessages = document.getElementById("chat-messages");
     chatMessages.innerHTML = "";
