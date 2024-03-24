@@ -1,14 +1,14 @@
 .profile_image{
-    left: 50px;
+    border-radius: 10px;
     height: 100%;    
 }
 
 .profile_thumbnail{    
-    position: relative;
-    left:45px;
-    width: 5%;
+    position: absolute;
+    left:4vw;
+    width: 5vw;
     height:50%;
-    bottom: 14vh;
+    bottom: 3vh;
     border-radius: 10px;
     border: 1px solid rgb(103, 101, 101);
 }
@@ -22,11 +22,14 @@
 }
 .DisplayUsername{
     font-family: Arial, Helvetica, sans-serif;
-    position: absolute;
+    text-align: center;
+    position: fixed;
     font-size: 2vh;
     top: 0;
-    bottom: 50vh;
-    left: 2vw;
+    bottom: 10vh;
+    left: 0;
+    height: 20vh;
+    width: 12vw;
 }
 
 body {
@@ -39,10 +42,13 @@ body {
     box-sizing: border-box;
 }
 .contents {
+    position: absolute;
     display: flex;
     justify-content: space-around;
     height: 100%;
-    /* padding-top:120px; */
+    left: 12vw;
+    right:0;
+    top:20vh;
 }
 .battle-button{
     
@@ -58,6 +64,18 @@ body {
     right:2vw;
     top:4vh;
 
+}
+.requestBattle{
+    
+    background-color: rgb(189, 48, 27);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 16vw;
+    height: 3vh;
+    font-size: 2vh;
+    
 }
 .logout-button{
     position: fixed;
@@ -83,9 +101,7 @@ body {
     font-size: 2vh;
 }
 .Randomfacttext{
-    /* border: solid black; */
-    /* border-radius: 2vw; */
-    /* padding-bottom: 100%; */
+   height: 30vh;
 }
 
 .chat-form {
@@ -94,13 +110,14 @@ body {
     bottom:1vh;    
 }
 .chat{
-    position: relative;
+    position: absolute;
     width:70vw;
     height: 70vh;
-    top: 20vh;
+    top: 5vh;
     bottom:0;
-    left: 13vw;
+    left: 3vw;
 }
+
 
 .userListContainer{
     position:fixed;
@@ -113,16 +130,36 @@ body {
     overflow: scroll;
     top:21vh;
 }
-
-#chat-messages{
-    height:5vh;
-    overflow: scroll;
-    color:black;
+.profile{
+    position:fixed;
+    text-align: center;
+    border-left-style: solid;
+    right: 0;
+    width:15vw;
+    height:85vh;
     bottom:0;
+    overflow: scroll;
+    /* padding-bottom: 3px; */
+    top:21vh;
+
 }
+#chat-messages{
+    /* height:5vh; */
+    height:90%;
+    overflow: scroll;
+    color: blue;
+    /* color:black; */
+    /* bottom:0; */
+}
+#opponent-chat{
+    height:90%;
+    overflow:scroll;
+    color:#1fa928;
+}
+
 #battle-messages{
     height:5vh;
     overflow: scroll;
-    bottom:0;
+    /* bottom:0; */
 }
  

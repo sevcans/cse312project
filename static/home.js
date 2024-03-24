@@ -44,18 +44,7 @@ async function updateUserList() {
         for(const user of content){
             addUserToList(user);
         }
-    // const request = new XMLHttpRequest();
-    // request.onreadystatechange = function () {
-    //     if (this.readyState === 4 && this.status === 200) {            
-    //         const users = JSON.parse(this.response);
-    //         for (const user of users) {
-    //             addUserToList(user);
-    //         }
-    //     }
-    // }
-    // // send get request to userList
-    // request.open("GET", "/userList");
-    // request.send();
+    
 }
 
 function welcome() {
@@ -70,13 +59,14 @@ function welcome() {
     setInterval(updateChat, 5000);
 }
 
-
-function chatMessageHTML(messageJSON) {
+// let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
+// let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
+//     messageHTML += "<span id='chat-messages'>"+username+ " | " + message + "</span>";
+async function chatMessageHTML(messageJSON) {
     const username = messageJSON.username;
     const message = messageJSON.message;
     let messageHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
     messageHTML += "<span id='userName' >" + username + ":"+ message+"</span>";
-    // messageHTML = "<span id='message'>" + username + "</b>: " + message + "</span>";
     return messageHTML;
 }
 function addMessageToChat(messageJSON) {
@@ -88,52 +78,39 @@ function addMessageToChat(messageJSON) {
 
 async function  sendChat(){
     // get text from chat box
-    var chatTextBox = document.getElementById("chat-text-box").value   
+    var chatTextBox = document.getElementById("chat-text-box").value
+      
     // create response based on what is expected at server chat messages
     const response = await fetch("/chat-messages",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 'X-Content-Type-Options': 'nosniff'},
-            body: JSON.stringify({'message': chatTextBox
-        })
-    });
-    const content = await response.json();
-    document.getElementById('chat-messages') = content.message;
-    // document.getElementById("chat-text-box").value ="";
-    if(content.message == "posted"){
-        document.getElementById("chat-text-box").value ="";
-    };
-    chatTextBox.focus();
+            body: JSON.stringify({'message': chatTextBox})
+    }).then((response)=>{return response.json()}).then((content)=>{
+        if(content.message == "posted"){
+          document.getElementById("chat-text-box").value = "";}
+    
+    });   
 }
 
 async function updateChat() {
-    // const request = new XMLHttpRequest();
-    // request.onreadystatechange = function () {
-    //     if (this.readyState === 4 && this.status === 200) {
-    //         clearChat()
-    //         const messages = JSON.parse(this.response);
-    //         for (const message of messages) {
-    //             addMessageToChat(message);
-    //         }
-    //     }
-    // }
-    // request.open("GET", "/chat-messages");
-    // request.send();
+   
+    // var user = document.getElementById("UserName").value  
     const response = await fetch("/chat-messages",{
         method: "GET",
         headers:{
             "Content-Type": "application/json",
-            'X-Content-Type-Options': 'nosniff'
-          }});
+            'X-Content-Type-Options': 'nosniff'}        
+        });
         clearChat();
         const content = await response.json();
         for(const message of content){
-        addMessageToChat(message);
+            addMessageToChat(message);
         }
 
 }
-
+// body:{"user":user}
 function clearChat() {
     const chatMessages = document.getElementById("chat-messages");
     chatMessages.innerHTML = "";
@@ -153,3 +130,26 @@ async function logout(){
       document.getElementById('LogOutMessage').textContent = content.message;
     }
   }
+
+//   async function requestBattle{
+
+
+//   }
+// var user = document.getElementById("UserName").value;
+    // const response = await fetch("/getUser",{
+    //     method: "GET",
+    //     headers:{
+    //         "Content-Type": "application/json",
+    //         'X-Content-Type-Options': 'nosniff'}        
+    //     });
+    //     clearChat();
+    //     const content = await response.json();
+    // var messageHTML =""
+    // if(username == user){
+    //     // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>"+ username+"</button> ";
+    //     messageHTML = "<span id='chat-messages'>Me: " + message + "</span>";
+    // }
+    // else{
+    //     messageHTML = "<br><button class='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button>";
+    //     messageHTML += "<span id='opponent-messages'>"+username+ " | " + message + "</span>";
+    // }

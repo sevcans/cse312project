@@ -11,9 +11,10 @@
 
     <div class="header">
                 
-        <h2>-<u>Code crusaders App</u>-</h2>
+        <h2>-<u>Code Crusaders App</u>-</h2>
+        <button onclick="randomText()" class ="randomfactbutton">Click for random Crusader fact!</button>
         <div class="crusader-fact">
-            <button onclick="randomText()" class ="randomfactbutton">Click for random Crusader fact!</button>
+            
             <p id="randomText" class="Randomfacttext" placeholder="fact"></p>
         </div>    
         <div class="DisplayUsername">
@@ -32,15 +33,22 @@
         <!-- <h4><small>{{userList}}</small></h4> -->
         <div id="userList"></div>
     </div>   
-    <div class="Contents">  
-        <div id="chat-messages"></div>      
-        <div class="chat-form">                    
-            <button id="chat-button" onclick="sendChat()">Send Message</button>
-            <input id="chat-text-box" type="text" size="50" placeholder="Send a Message">
-            <br>
-            <button id="battle-button" onclick="requestBattle()">Request Battle</button>
-            <input id="battle-chat-text-box" type="text" size="50" placeholder="@ someone">
-        </div>  
+    <div class="Contents">
+        <div class ="chat"> 
+            <div id="chat-messages"></div>      
+            <div class="chat-form">                    
+                <button id="chat-button" onclick="sendChat()">Send Message</button>
+                <input id="chat-text-box" type="text" size="50" placeholder="Send a Message">
+                <br>
+                <button id="battle-button" onclick="requestBattle()">Request Battle</button>
+                <input id="battle-chat-text-box" type="text" size="50" placeholder="@ someone">
+            </div>  
+        </div>
+        <div class="profile">
+            <u><b>Profile</b></u>
+            <div id="Experience">Experience Level: {{expLevel}}</div>
+            <div id="Health">Health: {{healthStats}}</div>
+        </div> 
     </div>
     <div class="logout">
         <button onclick="logout()" class="logout-button">Log out</button>

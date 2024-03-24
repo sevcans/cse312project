@@ -6,6 +6,7 @@ import random
 import hashlib
 import urllib.parse
 import time
+import html
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -15,8 +16,19 @@ client = MongoClient("Server312",27017)
 db = client["312Db"]
 userdata = db["UserData"]
 battledata = db["BattleArena"]
-chat = db["Chat"]
+# chat = db["Chat"]
+chat_collection = db["Chat"]
 
+def getUserList(userData):
+    
+    users = []
+    # users.append("corben")
+    for i in userData.find({},{"_id":0, "username":1}):
+        name =i['username']
+        users.append(name)
+        
+    return users
+    # return jsonify('users':users)
 #Generate a Salt
 def Saltgen(x):
     string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -152,11 +164,46 @@ def Logout():
 
 @app.route("/home", methods=['GET'])
 def homePage():
+
     #Checks Cookie and Auth if user exist
     if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
         return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+        # return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username'],userList = getUserList(userdata)) 
+
     else:
         return redirect('/')
+@app.route("/userList", methods=['GET'])
+def getUserList():
+    users = []    
+    for i in userdata.find({},{"_id":0, "username":1}):
+        users.append(i)
+    response = make_response(jsonify(users))        
+    return response
+
+@app.route("/chat-messages", methods=['GET'])
+def getChat():
+    messages = []
+    for i in chat_collection.find({},{"_id":0,"username":1,"message":1}):
+        messages.append(i)
+    response = make_response(jsonify(messages))
+    response.status_code = 200
+    response.mimetype = 'application/json'
+    return response
+
+@app.route("/chat-messages", methods=['POST'])
+def postChat():
+    user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+    username = user.get('username')
+    data = request.get_json()
+    message = data.get('message')
+    # message = html.escape(message)
+    entry = {"username":username, "message":message, "type":"chat"}
+    chat_collection.insert_one(entry)
+    response = make_response(jsonify({'message':'posted'}))
+    response.status_code = 201
+    return response
+
+
 # add n sniff after
 @app.after_request
 def add_nosniff(response):
