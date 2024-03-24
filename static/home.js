@@ -18,11 +18,12 @@ function randomText() {
 // format of user list display
 function userListHTML(userJSON) {
     const username = userJSON.username;
-    let userHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
+    let userHTML = "<br><button onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
     userHTML += "<span id='userName' style='height:2vh'>" + username + "</span>";
     // style="height: 2vh"
     return userHTML;
 }
+
 // adds new users who to list
 function addUserToList(userJSON) {
     const user = document.getElementById("userList");
@@ -30,7 +31,7 @@ function addUserToList(userJSON) {
     user.scrollIntoView(false);
     user.scrollTop = user.scrollHeight - user.clientHeight;
 }
-// 
+
 async function updateUserList() {
 
     const response = await fetch("/userList",{
@@ -43,8 +44,7 @@ async function updateUserList() {
         const content = await response.json();
         for(const user of content){
             addUserToList(user);
-        }
-    
+        }    
 }
 
 function welcome() {
@@ -57,17 +57,16 @@ function welcome() {
     updateUserList();
     updateChat();
     setInterval(updateChat, 5000);
+    setInterval(updateUserList, 5000);
 }
 
-// let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
-// let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
-//     messageHTML += "<span id='chat-messages'>"+username+ " | " + message + "</span>";
-async function chatMessageHTML(messageJSON) {
-    const username = messageJSON.username;
-    const message = messageJSON.message;
-    let messageHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
-    messageHTML += "<span id='userName' >" + username + ":"+ message+"</span>";
-    return messageHTML;
+
+ function chatMessageHTML(messageJSON) {
+    var username = messageJSON.username;
+    var message = messageJSON.message;    
+    let messageHTML = "<br><br><button class='chat-username'>" +username+"</button>";
+    messageHTML +="<span class='chat-messages'>"+message+"</span><button onclick='battle()' class='chat-battle-button'>Battle "+username+"</button>";
+    return messageHTML;   
 }
 function addMessageToChat(messageJSON) {
     const chatMessages = document.getElementById("chat-messages");
@@ -76,7 +75,7 @@ function addMessageToChat(messageJSON) {
     chatMessages.scrollTop = chatMessages.scrollHeight - chatMessages.clientHeight;
 }
 
-async function  sendChat(){
+async function sendChat(){
     // get text from chat box
     var chatTextBox = document.getElementById("chat-text-box").value
       
@@ -89,15 +88,12 @@ async function  sendChat(){
             body: JSON.stringify({'message': chatTextBox})
     }).then((response)=>{return response.json()}).then((content)=>{
         if(content.message == "posted"){
-          document.getElementById("chat-text-box").value = "";}
-    
+          document.getElementById("chat-text-box").value = "";}    
     });   
 }
 
 async function updateChat() {
-   
-    // var user = document.getElementById("UserName").value  
-    const response = await fetch("/chat-messages",{
+       const response = await fetch("/chat-messages",{
         method: "GET",
         headers:{
             "Content-Type": "application/json",
@@ -108,9 +104,7 @@ async function updateChat() {
         for(const message of content){
             addMessageToChat(message);
         }
-
 }
-// body:{"user":user}
 function clearChat() {
     const chatMessages = document.getElementById("chat-messages");
     chatMessages.innerHTML = "";
@@ -131,25 +125,3 @@ async function logout(){
     }
   }
 
-//   async function requestBattle{
-
-
-//   }
-// var user = document.getElementById("UserName").value;
-    // const response = await fetch("/getUser",{
-    //     method: "GET",
-    //     headers:{
-    //         "Content-Type": "application/json",
-    //         'X-Content-Type-Options': 'nosniff'}        
-    //     });
-    //     clearChat();
-    //     const content = await response.json();
-    // var messageHTML =""
-    // if(username == user){
-    //     // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>"+ username+"</button> ";
-    //     messageHTML = "<span id='chat-messages'>Me: " + message + "</span>";
-    // }
-    // else{
-    //     messageHTML = "<br><button class='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button>";
-    //     messageHTML += "<span id='opponent-messages'>"+username+ " | " + message + "</span>";
-    // }
