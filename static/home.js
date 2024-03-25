@@ -75,8 +75,13 @@ function chatMessageHTML(messageJSON) {
  function chatMessageHTML(messageJSON) {
     var username = messageJSON.username;
     var message = messageJSON.message;    
+    var upvote = messageJSON.upvote.length;
+    if(upvote == 0){upvote = ""}
+    var downvote = messageJSON.downvote.length;
+    if(downvote == 0){downvote = ""}
+    var uid = messageJSON.id;
     let messageHTML = "<br><br><button class='chat-username'>" +username+"</button>";
-    messageHTML +="<span class='chat-messages'>"+message+"</span><button onclick='battle()' class='chat-battle-button'>Battle "+username+"</button>";
+    messageHTML +="<span class='chat-messages'>"+message+"</span><button onclick='battle()' class='chat-battle-button'>Battle "+username+"</button> <button onclick='upvote("+uid+",\""+username+"\")' class='chat-upvote'>"+upvote+" ^</button> <button onclick='downvote("+uid+",\""+username+"\")' class='chat-downvote'>"+downvote+" v</button>";
     return messageHTML;   
 }
 function addMessageToChat(messageJSON) {
@@ -116,6 +121,7 @@ async function updateChat() {
             addMessageToChat(message);
         }
 }
+
 function clearChat() {
     const chatMessages = document.getElementById("chat-messages");
     chatMessages.innerHTML = "";
@@ -136,6 +142,29 @@ async function logout(){
       document.getElementById('LogOutMessage').textContent = content.message;
     }
   }
+
+  
+async function upvote(uid, username){
+    const response = await fetch("/upvote",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'X-Content-Type-Options': 'nosniff'
+        },
+        body: JSON.stringify({"id": uid, "username": username})
+      });
+  }
+  
+async function downvote(uid, username){
+    const response = await fetch("/downvote",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'X-Content-Type-Options': 'nosniff'
+        },
+        body: JSON.stringify({"id": uid, "username": username})
+      });
+    }
 
 function battle_redirect() {
     window.location.replace("/battle");
