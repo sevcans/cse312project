@@ -62,7 +62,7 @@ function welcome() {
 // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
 // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
 //     messageHTML += "<span id='chat-messages'>"+username+ " | " + message + "</span>";
-async function chatMessageHTML(messageJSON) {
+function chatMessageHTML(messageJSON) {
     const username = messageJSON.username;
     const message = messageJSON.message;
     let messageHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
@@ -90,12 +90,10 @@ async function  sendChat(){
     }).then((response)=>{return response.json()}).then((content)=>{
         if(content.message == "posted"){
           document.getElementById("chat-text-box").value = "";}
-    
     });   
 }
 
 async function updateChat() {
-   
     // var user = document.getElementById("UserName").value  
     const response = await fetch("/chat-messages",{
         method: "GET",
@@ -107,7 +105,7 @@ async function updateChat() {
         const content = await response.json();
         for(const message of content){
             addMessageToChat(message);
-        }
+        };
 
 }
 // body:{"user":user}
@@ -115,6 +113,7 @@ function clearChat() {
     const chatMessages = document.getElementById("chat-messages");
     chatMessages.innerHTML = "";
 }
+
 async function logout(){
     const response = await fetch("/logout",{
       method: "POST",
