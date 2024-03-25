@@ -15,15 +15,10 @@ app.config['DEBUG'] = True
 client = MongoClient("Server312",27017)
 db = client["312Db"]
 userdata = db["UserData"]
-<<<<<<< HEAD
-battledata = db["BattleArena"]
-# chat = db["Chat"]
 chat_collection = db["Chat"]
-=======
 singlebattle = db["Single_Arena"]
 c_list = db["Challenger_List"]
 multibattle = db["Multi_Arena"]
->>>>>>> a83b5a8591cbbd6b1ea74f9bac3780d47010ea94
 
 def getUserList(userData):
     
@@ -91,7 +86,7 @@ def homePage():
         return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
     else:
         return redirect('/')
-
+    
 #Register for an account
 @app.route("/register", methods=['POST'])
 def register():
@@ -249,18 +244,7 @@ def Logout():
         response = make_response(jsonify({'message': 'Logged Out Successful'}))
         response.set_cookie('auth', '', expires=0)
         return response
-<<<<<<< HEAD
 
-@app.route("/home", methods=['GET'])
-def homePage():
-
-    #Checks Cookie and Auth if user exist
-    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
-        return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
-        # return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username'],userList = getUserList(userdata)) 
-
-    else:
-        return redirect('/')
 @app.route("/userList", methods=['GET'])
 def getUserList():
     users = []    
@@ -309,9 +293,7 @@ def postChat():
     
 #     return response
 
-=======
     
->>>>>>> a83b5a8591cbbd6b1ea74f9bac3780d47010ea94
 # add n sniff after
 @app.after_request
 def add_nosniff(response):
