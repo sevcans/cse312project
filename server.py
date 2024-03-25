@@ -196,13 +196,29 @@ def postChat():
     username = user.get('username')
     data = request.get_json()
     message = data.get('message')
-    # message = html.escape(message)
+    message = html.escape(message)
     entry = {"username":username, "message":message, "type":"chat"}
     chat_collection.insert_one(entry)
     response = make_response(jsonify({'message':'posted'}))
     response.status_code = 201
     return response
 
+# @app.route("/getUser", methods=['GET'])
+# def getUser():
+#     data = request.get_json()
+#     userchat= data.get('username')    
+#     user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"username":userchat})
+#     username = user['username']
+#     if(username==userchat):
+#         response = make_response(jsonify({'status':'match'}))
+#         response.status_code = 200
+#         response.mimetype = 'application/json'
+#     else:
+#         response = make_response(jsonify({'status':'nomatch'}))
+#         response.status_code = 200
+#         response.mimetype = 'application/json'
+    
+#     return response
 
 # add n sniff after
 @app.after_request
