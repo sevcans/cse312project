@@ -66,7 +66,7 @@ def home():
 @app.route("/battle", methods=['GET'])
 def BattlePage():
     #Checks Cookie and Auth if user exist
-    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         return render_template('battle.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
     else:
         return redirect('/')
@@ -74,7 +74,7 @@ def BattlePage():
 @app.route("/multi", methods=['GET'])
 def MultiPage():
     #Checks Cookie and Auth if user exist
-    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         return render_template('multi.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
     else:
         return redirect('/')
@@ -82,7 +82,7 @@ def MultiPage():
 @app.route("/home", methods=['GET'])
 def homePage():
     #Checks Cookie and Auth if user exist
-    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
     else:
         return redirect('/')
@@ -107,8 +107,7 @@ def register():
     #Generate user info
     salt = Saltgen(50)
     hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
-    token = hashlib.sha256((salt[15:40]).encode('utf-8')).hexdigest()
-    user_info = {"username" : username, "password": hashpass,"salt": salt, "auth_token": token}
+    user_info = {"username" : username, "password": hashpass,"salt": salt, "auth_token": ''}
     #Insert in DB
     userdata.insert_one(user_info)
     return jsonify({'message': 'Registration successful'})
@@ -132,9 +131,11 @@ def login():
        #Check PW
        if authpass == hashpass:
         #Update auth token
-        token = userdata.find_one({"username": username, "password":authpass})['salt'][15:40]
+        auth_cookie = salt[15:40]
+        hash_cookie = hashlib.sha256((auth_cookie).encode('utf-8')).hexdigest()
+        userdata.update_one({"username": username, "password":hashpass},{"$set":{"auth_token": hash_cookie}})
         response = make_response(jsonify({'message': 'Login successful'}))
-        response.set_cookie('auth', token, httponly=True, max_age=7200)
+        response.set_cookie('auth', auth_cookie, httponly=True, max_age=7200)
         return response
        else:
            return jsonify({'message': 'Password or Username Incorrect'})
@@ -144,7 +145,7 @@ def login():
 # Find a ongoing battle
 @app.route("/find_battle", methods=['POST'])
 def findbattle():
-    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
         return jsonify({'message': 'Battle Found',
                         "player_image": data['player_image'],"player_health":data['player_health'],"player_damage":data['player_damage'],"player_name": data["player_name"],
@@ -157,7 +158,7 @@ def findbattle():
 @app.route("/gen_battle", methods=['POST'])
 def generateBattle():
     # check to see if battle exist
-    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         # find the battle
         data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
         # return battle data
@@ -183,7 +184,7 @@ def generateBattle():
 @app.route("/update_single_battle", methods=['POST'])
 def updateBattle_single():
     # find battle data
-    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}):
+    if 'auth' in request.cookies and singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         data = singlebattle.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
         if data['bot_health'] <= 0:
             singlebattle.delete_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
@@ -241,6 +242,7 @@ def Logout():
     if 'auth' not in request.cookies:
         return jsonify({'message': 'You Have not Logged In'})
     else:
+        userdata.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"auth_token": ''}})
         response = make_response(jsonify({'message': 'Logged Out Successful'}))
         response.set_cookie('auth', '', expires=0)
         return response

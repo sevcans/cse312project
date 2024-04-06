@@ -1,0 +1,36 @@
+.profile-box{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25vw;
+    height: 70vh;
+    border: .2vw solid black;
+    border-radius: 2vw;
+    top: 10vh;
+}
+
+.circular--portrait { 
+    position: absolute;
+    top: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px; 
+    height: 200px; 
+    overflow: hidden; 
+    border-radius: 50%; 
+} 
+.circular--portrait img { 
+    max-width: auto;
+    max-height: 100%;
+    margin-left: -20%;
+}
+.DisplayUsername{
+    position: absolute;
+    top: 25vh;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.image-upload{
+    position: absolute;
+    top: 30vh;
+}

@@ -57,7 +57,7 @@ body {
     color: white;
     cursor: pointer;
     border-radius: 25px;
-    width: 6vw;
+    width: 7vw;
     height: 4vh;
     font-size: 2vh;
     right:2vw;
@@ -201,4 +201,16 @@ body {
     background-color: #1fa928;
     border-radius: 5px;
 }
- 
+.profile-button{
+    position: absolute;
+    background-color: rgb(48, 170, 218);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 7vw;
+    height: 4vh;
+    font-size: 2vh;
+    right:2vw;
+    top:10vh;
+}

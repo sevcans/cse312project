@@ -67,8 +67,8 @@ function chatMessageHTML(messageJSON) {
     const message = messageJSON.message;
     let messageHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
     messageHTML += "<span id='userName' >" + username + ":"+ message+"</span>";
-    return messageHTML;
     setInterval(updateUserList, 5000);
+    return messageHTML;
 }
 
 
@@ -139,4 +139,7 @@ async function logout(){
 
 function battle_redirect() {
     window.location.replace("/battle");
+}
+function profile_redirect() {
+    window.location.replace("/profile");
 }
