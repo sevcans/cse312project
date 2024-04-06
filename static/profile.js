@@ -17,17 +17,3 @@ async function logout(){
 function home_redirect() {
     window.location.replace("/home");
 }
-
-async function getProfile(){
-    const response = await fetch("/profile_stats",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        'X-Content-Type-Options': 'nosniff'
-      },
-    });
-    const content = await response.json();
-    if (content.message == 'Profile Found' && content.image != ''){
-      document.getElementById('user_profile_image').src = content.image
-    }
-}

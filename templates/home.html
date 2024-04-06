@@ -11,21 +11,19 @@
     <div class="header">
                 
         <h2>Conversation Room</h2>
-        <div class="DisplayUsername">
-            <h3>{{UserName}}</h3>        
-        </div>
-        <div class="profile_thumbnail">
-                <img id="profileImage" src="static/crusader.png"  class="profile_image"/>
-        </div>   
-
         <div>
-            <button onclick="battle_redirect()" class="battle-button">Battle a Bot</button>
+            <div class="DisplayUsername">
+                <h3>{{UserName}}</h3>        
+            </div>
+            <div class="profile_thumbnail">
+                <img src="{{profile}}"  class="profile_image"/>
+            </div>
         </div>
-        <div>
-            <button onclick="profile_redirect()" class="profile-button">Profile</button>
-        </div>
-            
+        
+        <button onclick="battle_redirect()" class="battle-button">Battle a Bot</button>
+        <button onclick="profile_redirect()" class="profile-button">Profile</button>   
     </div>
+
     <div class="userListContainer">
         <u><b>User List</b></u>
         <!-- <h4><small>{{userList}}</small></h4> -->

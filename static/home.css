@@ -5,12 +5,11 @@
 
 .profile_thumbnail{    
     position: absolute;
-    left:4vw;
-    width: 5vw;
+    left: 3.4vw;
+    top: 6vh;
+    width: auto;
     height:50%;
-    bottom: 3vh;
-    border-radius: 10px;
-    border: 1px solid rgb(103, 101, 101);
+    border-radius: 1vw;
 }
 .header {
     position: fixed;
@@ -23,13 +22,10 @@
 .DisplayUsername{
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    position: fixed;
+    position: absolute;
     font-size: 2vh;
-    top: 0;
-    bottom: 10vh;
-    left: 0;
-    height: 20vh;
-    width: 12vw;
+    top: 0vh;
+    left:2.5vw;
 }
 
 body {

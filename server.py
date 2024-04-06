@@ -11,7 +11,6 @@ import time
 import html
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
 #DataBase
 client = MongoClient("Server312",27017)
@@ -21,7 +20,7 @@ chat_collection = db["Chat"]
 singlebattle = db["Single_Arena"]
 c_list = db["Challenger_List"]
 multibattle = db["Multi_Arena"]
-UPLOAD_FOLDER = '/static/image/'
+UPLOAD_FOLDER = 'static/image/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -90,7 +89,8 @@ def MultiPage():
 def homePage():
     #Checks Cookie and Auth if user exist
     if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
-        return render_template('home.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+        user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        return render_template('home.html', UserName = user['username'], profile = user['profile_pic']) 
     else:
         return redirect('/')
     
@@ -98,7 +98,8 @@ def homePage():
 def profilePage():
     #Checks Cookie and Auth if user exist
     if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
-        return render_template('profile.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+        user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+        return render_template('profile.html', UserName = user['username'], profile = user['profile_pic']) 
     else:
         return redirect('/')
     
@@ -122,7 +123,7 @@ def register():
     #Generate user info
     salt = Saltgen(50)
     hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
-    user_info = {"username" : username, "password": hashpass,"salt": salt, "auth_token": '',"profile_pic":''}
+    user_info = {"username" : username, "password": hashpass,"salt": salt, "auth_token": '',"profile_pic":'static/image/default.png'}
     #Insert in DB
     userdata.insert_one(user_info)
     return jsonify({'message': 'Registration successful'})
@@ -338,18 +339,15 @@ def image_upload():
     file = request.files['user_image']
     # check if its an allowed file (png, jpg, jpeg) 
     if file and allowed_file(file.filename):
+        # gets the user for the file
+        user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
         # cleans the file to make it safe
-        new_name = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
-        filename = new_name +"_"+ secure_filename(file.filename)
-        print(filename)
-        #chenge the name of the file 
-        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # return redirect(url_for('uploaded_file',filename=filename))
-
-@app.route("/profile_stats", methods=['GET'])
-def Send_Profile():
-    profile_pic = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['profile_pic']
-    return jsonify({"message": "Profile Found", "image": profile_pic})
+        filename = user + "_" + secure_filename(file.filename)
+        # saves file to server
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # update user profile
+        userdata.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"profile_pic": (app.config['UPLOAD_FOLDER']+filename)}})
+        return redirect("/profile")
 # @app.route("/getUser", methods=['GET'])
 # def getUser():
 #     data = request.get_json()
