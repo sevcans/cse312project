@@ -258,7 +258,8 @@ def getUserList():
 @app.route("/chat-messages", methods=['GET'])
 def getChat():
     messages = []
-    for i in chat_collection.find({},{"_id":0,"username":1,"message":1}):
+    for i in chat_collection.find():
+        i.pop("_id")
         messages.append(i)
     response = make_response(jsonify(messages))
     response.status_code = 200
@@ -272,9 +273,42 @@ def postChat():
     data = request.get_json()
     message = data.get('message')
     message = html.escape(message)
-    entry = {"username":username, "message":message, "type":"chat"}
+    uid = random.randint(1,999999999)
+    entry = {"id":uid,"username":username, "message":message, "type":"chat","upvote":[],"downvote":[]}
     chat_collection.insert_one(entry)
     response = make_response(jsonify({'message':'posted'}))
+    response.status_code = 201
+    return response
+
+@app.route("/upvote", methods=['POST'])
+def upvote():
+    data = request.get_json()
+    uid = data.get("id")
+    username = data.get("username")
+    upvotes = chat_collection.find_one({"id": uid})
+    if username not in upvotes["upvote"]:
+        upvotes = upvotes["upvote"]
+        upvotes.append(username)
+    else:
+        upvotes = upvotes["upvote"]
+    chat_collection.update_one({"id": uid},{"$set": {"upvote": upvotes}})
+    response = make_response(jsonify({'message':'upvoted'}))
+    response.status_code = 201
+    return response
+
+@app.route("/downvote", methods=['POST'])
+def downvote():
+    data = request.get_json()
+    uid = data.get("id")
+    username = data.get("username")
+    downvotes = chat_collection.find_one({"id": uid})
+    if username not in downvotes["downvote"]:
+        downvotes = downvotes["downvote"]
+        downvotes.append(username)
+    else:
+        downvotes = downvotes["downvote"]
+    chat_collection.update_one({"id": uid},{"$set": {"downvote": downvotes}})
+    response = make_response(jsonify({'message':'downvoted'}))
     response.status_code = 201
     return response
 
