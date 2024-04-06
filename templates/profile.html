@@ -6,20 +6,26 @@
     </head>
     <body>
         <div class="profile-box">
+
             <div class="DisplayUsername">
                 <h3>{{UserName}}</h3>        
             </div>
+
             <div class="circular--portrait"> 
-                <img src="/static/image/image.png"> 
+                <img src="/static/image/default.png" id="user_profile_image"> 
             </div>
+
             <div class ="image-upload">
                 <form action="/profile-pic" method="post" enctype="multipart/form-data">
-                    <input id="form-file" type="file" name="upload">
-                    <input type="submit" value="Post">
+                    <input type="file" name="user_image">
+                    <input type="submit" value="upload" class="upload_button">
                 </form>
             </div>
 
         </div>
+
+        <button onclick="logout()" class="logout-button">Log out</button>
+        <button onclick="home_redirect()" class="home-button">Home</button>
     </body>
 
     <script src="static/profile.js"></script>

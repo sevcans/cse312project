@@ -1,7 +1,9 @@
 from flask import Flask
 from flask import render_template
-from flask import Response, make_response, request, send_from_directory, redirect, jsonify
+from flask import Response, make_response, request, send_from_directory, redirect, jsonify, url_for, flash
+from werkzeug.utils import secure_filename
 from pymongo import MongoClient
+import os
 import random
 import hashlib
 import urllib.parse
@@ -19,9 +21,14 @@ chat_collection = db["Chat"]
 singlebattle = db["Single_Arena"]
 c_list = db["Challenger_List"]
 multibattle = db["Multi_Arena"]
+UPLOAD_FOLDER = '/static/image/'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def getUserList(userData):
-    
+
     users = []
     # users.append("corben")
     for i in userData.find({},{"_id":0, "username":1}):
@@ -87,6 +94,14 @@ def homePage():
     else:
         return redirect('/')
     
+@app.route("/profile", methods=['GET'])
+def profilePage():
+    #Checks Cookie and Auth if user exist
+    if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
+        return render_template('profile.html', UserName = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']) 
+    else:
+        return redirect('/')
+    
 #Register for an account
 @app.route("/register", methods=['POST'])
 def register():
@@ -107,7 +122,7 @@ def register():
     #Generate user info
     salt = Saltgen(50)
     hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
-    user_info = {"username" : username, "password": hashpass,"salt": salt, "auth_token": ''}
+    user_info = {"username" : username, "password": hashpass,"salt": salt, "auth_token": '',"profile_pic":''}
     #Insert in DB
     userdata.insert_one(user_info)
     return jsonify({'message': 'Registration successful'})
@@ -312,6 +327,29 @@ def downvote():
     response.status_code = 201
     return response
 
+@app.route("/profile-pic", methods=['POST'])
+def image_upload():
+    # check if the user_image in the request
+    if 'user_image' not in request.files:
+        return redirect("/profile")
+    # check if a file is seclected
+    if request.files['user_image'].filename == '':
+        return redirect("/profile")
+    file = request.files['user_image']
+    # check if its an allowed file (png, jpg, jpeg) 
+    if file and allowed_file(file.filename):
+        # cleans the file to make it safe
+        new_name = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+        filename = new_name +"_"+ secure_filename(file.filename)
+        print(filename)
+        #chenge the name of the file 
+        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # return redirect(url_for('uploaded_file',filename=filename))
+
+@app.route("/profile_stats", methods=['GET'])
+def Send_Profile():
+    profile_pic = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['profile_pic']
+    return jsonify({"message": "Profile Found", "image": profile_pic})
 # @app.route("/getUser", methods=['GET'])
 # def getUser():
 #     data = request.get_json()
