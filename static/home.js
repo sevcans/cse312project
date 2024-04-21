@@ -1,3 +1,4 @@
+const { json } = require("express");
 
 const randomCrusaderStuff = [
     "Crusader armor evolved over time, starting with chainmail shirts and helmets in the early Crusades, and later incorporating plate armor during the later Crusades.",
@@ -12,9 +13,24 @@ const randomCrusaderStuff = [
     "Despite advancements in armor technology, Crusaders still faced significant risks on the battlefield, including injury from blunt force trauma, exhaustion, and the limitations of their protective gear against certain weapons."
   ];
 
+var socket = null;
+
+
+
 function randomText() {
     document.getElementById("randomText").innerHTML = "<br/>"+randomCrusaderStuff[Math.floor(Math.random()*9)]
 }
+
+function updateOnlineList(data) {
+    html = ""
+    data = JSON.parse(data)
+    for(const username of data){
+        html += "<span id='userName' style='height:2vh'>" + username + "</span>";
+    }
+    const list = document.getElementById("onlineList");
+    list.innerHTML = html
+}
+
 // format of user list display
 function userListHTML(userJSON) {
     const username = userJSON.username;
@@ -47,6 +63,19 @@ async function updateUserList() {
         }    
 }
 
+function createSocket(){
+    socket = io();
+        socket.on('connect',function(){
+            socket.emit("create-connection")
+        });
+        socket.on("chat-event", (data) => {
+            addMessageToChat(JSON.parse(data))
+        });
+        socket.on("onlineList", (data) => {
+            updateOnlineList(data)
+        });
+}
+
 function welcome() {
     document.addEventListener("keypress", function (event) {
         if (event.code === "Enter") {
@@ -56,7 +85,8 @@ function welcome() {
     document.getElementById("chat-text-box").focus();
     updateUserList();
     updateChat();
-    setInterval(updateChat, 5000);
+    // setInterval(updateChat, 5000);
+    createSocket();
 }
 
 // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
@@ -96,16 +126,20 @@ async function sendChat(){
     var chatTextBox = document.getElementById("chat-text-box").value
       
     // create response based on what is expected at server chat messages
-    const response = await fetch("/chat-messages",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'X-Content-Type-Options': 'nosniff'},
-            body: JSON.stringify({'message': chatTextBox})
-    }).then((response)=>{return response.json()}).then((content)=>{
-        if(content.message == "posted"){
-          document.getElementById("chat-text-box").value = "";}    
-    });   
+    if(socket){
+        socket.emit("chat",{message:chatTextBox})
+    }else{
+        const response = await fetch("/chat-messages",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-Content-Type-Options': 'nosniff'},
+                body: JSON.stringify({'message': chatTextBox})
+        }).then((response)=>{return response.json()}).then((content)=>{
+            if(content.message == "posted"){
+            document.getElementById("chat-text-box").value = "";}    
+        });   
+    }
 }
 
 async function updateChat() {
