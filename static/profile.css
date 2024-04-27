@@ -8,7 +8,12 @@
     border-radius: 2vw;
     top: 10vh;
 }
-
+.error-message{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 34vh;
+}
 .circular--portrait { 
     position: absolute;
     top: 2vh;

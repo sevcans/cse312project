@@ -25,17 +25,16 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+error_mess = ""
 def getUserList(userData):
-
     users = []
     # users.append("corben")
     for i in userData.find({},{"_id":0, "username":1}):
         name =i['username']
         users.append(name)
-        
     return users
     # return jsonify('users':users)
+    
 #Generate a Salt
 def Saltgen(x):
     string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -66,6 +65,7 @@ def Characer_Gen():
 #when / is url returns index.html contents as home page and also calls on css/js files
 @app.route("/", methods=['GET'])
 def home():
+    print(request.remote_addr)
     return render_template('index.html')
  
 # Battle Page Rendering
@@ -99,7 +99,7 @@ def profilePage():
     #Checks Cookie and Auth if user exist
     if 'auth' in request.cookies and userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()}) and request.cookies.get('auth') != '':
         user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
-        return render_template('profile.html', UserName = user['username'], profile = user['profile_pic']) 
+        return render_template('profile.html', UserName = user['username'], profile = user['profile_pic'], error = error_mess) 
     else:
         return redirect('/')
     
@@ -348,6 +348,7 @@ def image_upload():
         # update user profile
         userdata.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"profile_pic": (app.config['UPLOAD_FOLDER']+filename)}})
         return redirect("/profile")
+    
 # @app.route("/getUser", methods=['GET'])
 # def getUser():
 #     data = request.get_json()
@@ -376,4 +377,4 @@ def style(folder, file):
     return send_from_directory(folder, file)
    
 if __name__ =='__main__':
-    app.run(host ='0.0.0.0', port=8080, debug=True)
+    app.run(host ='0.0.0.0', port=8080)
