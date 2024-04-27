@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import Response, make_response, request, send_from_directory, redirect, jsonify, url_for, flash
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 import os
@@ -9,8 +10,10 @@ import hashlib
 import urllib.parse
 import time
 import html
+import json
 
 app = Flask(__name__)
+socket = SocketIO(app)
 
 #DataBase
 client = MongoClient("Server312",27017)
@@ -20,6 +23,7 @@ chat_collection = db["Chat"]
 singlebattle = db["Single_Arena"]
 c_list = db["Challenger_List"]
 multibattle = db["Multi_Arena"]
+onlineUsers = []
 UPLOAD_FOLDER = 'static/image/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
@@ -365,6 +369,41 @@ def image_upload():
 #         response.mimetype = 'application/json'
     
 #     return response
+def getUser(req):
+    return userdata.find_one({"auth_token": hashlib.sha256((req.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+
+@app.route("/socket.io/", methods=['POST'])
+def socket_connect():
+    print("A socket was connected")
+
+@socket.on('connect')
+def handle_connect(sid = -1):
+    user = getUser(request)
+    onlineUsers.append(user)
+    emit("onlineList",json.dumps(onlineUsers),broadcast=True)
+    print("Client connected: ",user)
+
+@socket.on('disconnect')
+def handle_disconnect():
+    user = getUser(request)
+    onlineUsers.remove(user)
+    emit("onlineList",json.dumps(onlineUsers),broadcast=True)
+    print("Client disconnected: ",user)
+
+
+@socket.on('chat')
+def handleChat(data):
+    username = getUser(request)
+    message = data.get('message')
+    message = html.escape(message)
+    uid = random.randint(1,999999999)
+    entry = {"id":uid,"username":username, "message":message, "type":"chat","upvote":[],"downvote":[]}
+    print("A message was received...",data)
+    send = json.dumps(entry)
+    chat_collection.insert_one(entry)
+    emit('chat-event', send, broadcast=True)
+    
+
 
     
 # add n sniff after
