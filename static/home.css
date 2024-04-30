@@ -61,7 +61,6 @@ body {
 
 }
 .request_Battle{
-    
     background-color: rgb(189, 48, 27);
     border: none;
     color: white;
@@ -151,15 +150,6 @@ body {
     font-size: 20px;
     
 }
-.chat-battle-button{
-    position:absolute;
-    left: 60vw;
-    width:10vw;
-    font-size:10px;
-    background-color: red;
-    color:white;
-    height:4vh;
-}
 .chat-upvote{
     position:absolute;
     left: 52vw;
@@ -185,7 +175,7 @@ body {
     padding-top: 1px;
     /* overflow: scroll; */
     height:4vh;
-    width:50vw;
+    width:61vw;
     color:black;
     background-color:#cdd6cd;
     border-radius: 5px;
@@ -227,4 +217,11 @@ body {
     font-size: 2vh;
     right:2vw;
     top:10vh;
+}
+.profile_img{
+    position:absolute;
+    transform: scale(0.08);
+    left: -27.5vw;
+    top: -24.5vh;
+    border-radius: 10px;
 }

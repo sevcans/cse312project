@@ -1,0 +1,62 @@
+<html lang="en">
+    <head>
+        <title>Battle Arena</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/static/warzone.css"/>    
+    </head>
+
+    <body onload="get_battle()">
+
+        <div class="DisplayUsername">
+            <h3>{{UserName}}</h3>
+            <button class="forfeit-button">Forfeit</button>
+        </div>
+
+        <div class="Battle_Title">
+            <h1 class="Battle_Arena_Title">Battle Arena</h1>
+        </div>
+
+        <div class="Arena">
+
+            <div class="player1">
+                <div class="player1_detail">
+                    <img class="player1_profile" src="/static/image/default.png">
+                    <h2 id="player1_name">dxcfgvhbjnk</h2>
+                </div>
+                <img class="player1_char_image" src="/static/crusader.png">
+                <div class="player1char_detail">
+                    <p class="player1_health">Health: 100</p>
+                    <p class="player1_Damage">Damage: 5</p>
+                </div>
+                <div class="player1_buttons">
+                    <button class="attack_button" id="attack_button" onclick="attack()" style="display: none;" value="attack">Attack</button>
+                    <button class="defense_button" id="defense_button" onclick="defend()" style="display: none;" value="defend">Defend</button>
+                </div>
+            </div>
+            
+            <div class="player2">
+                <div class="player2_detail">
+                    <img class="player2_profile" src="/static/image/default.png">
+                    <h2 id="player2_name">dxcfgvhbjnk</h2>
+                </div>
+
+                <img class="player2_char_image" src="/static/crusader.png">
+
+                <div class="player2char_detail">
+                    <p class="player2_health">Health: 100</p>
+                    <p class="player2_Damage">Damage: 5</p>
+                </div>
+                <div class="player2_buttons">
+                    <button class="attack_button" id="attack_button" onclick="attack()"  style="display: none;" value="attack">Attack</button>
+                    <button class="defense_button" id="defense_button" onclick="defend()"  style="display: none;" value="defend">Defend</button>
+                </div>
+            </div>
+            <input type="hidden" id="match_id" value="'+game_id+'"></div>
+        </div>
+        <div class="logout">
+            <button onclick="logout()" class="logout-button">Log out</button>
+        </div>
+    </body>
+    <script src="static/warzone.js"></script>
+
+</html>

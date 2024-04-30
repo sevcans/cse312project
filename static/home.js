@@ -31,23 +31,6 @@ function updateOnlineList(data) {
     list.innerHTML = html
 }
 
-// format of user list display
-function userListHTML(userJSON) {
-    const username = userJSON.username;
-    let userHTML = "<br><button onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
-    userHTML += "<span id='userName' style='height:2vh'>" + username + "</span>";
-    // style="height: 2vh"
-    return userHTML;
-}
-
-// adds new users who to list
-function addUserToList(userJSON) {
-    const user = document.getElementById("userList");
-    user.innerHTML += userListHTML(userJSON);
-    user.scrollIntoView(false);
-    user.scrollTop = user.scrollHeight - user.clientHeight;
-}
-
 async function updateUserList() {
 
     const response = await fetch("/userList",{
@@ -92,17 +75,8 @@ function welcome() {
 // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
 // let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
 //     messageHTML += "<span id='chat-messages'>"+username+ " | " + message + "</span>";
+
 function chatMessageHTML(messageJSON) {
-    const username = messageJSON.username;
-    const message = messageJSON.message;
-    let messageHTML = "<br><button onclick='request_battle(\"" + username + "\")'>Battle</button> ";
-    messageHTML += "<span id='userName' >" + username + ":"+ message+"</span>";
-    setInterval(updateUserList, 5000);
-    return messageHTML;
-}
-
-
- function chatMessageHTML(messageJSON) {
     var username = messageJSON.username;
     var message = messageJSON.message;    
     var upvote = messageJSON.upvote.length;
@@ -110,8 +84,9 @@ function chatMessageHTML(messageJSON) {
     var downvote = messageJSON.downvote.length;
     if(downvote == 0){downvote = ""}
     var uid = messageJSON.id;
+    var profile = messageJSON.profile;
     let messageHTML = "<br><br><button class='chat-username'>" +username+"</button>";
-    messageHTML +="<span class='chat-messages'>"+message+"</span><button onclick='battle()' class='chat-battle-button'>Battle "+username+"</button> <button onclick='upvote("+uid+",\""+username+"\")' class='chat-upvote'>"+upvote+" ^</button> <button onclick='downvote("+uid+",\""+username+"\")' class='chat-downvote'>"+downvote+" v</button>";
+    messageHTML +="<span class='chat-messages'>"+message+"<button onclick='upvote("+uid+",\""+username+"\")' class='chat-upvote'>"+upvote+" ^</button> <button onclick='downvote("+uid+",\""+username+"\")' class='chat-downvote'>"+downvote+" v</button> <img src='"+profile+"' alt='image' class='profile_img'></span>";
     return messageHTML;   
 }
 function addMessageToChat(messageJSON) {
