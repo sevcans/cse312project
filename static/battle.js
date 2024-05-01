@@ -99,5 +99,5 @@ async function find_battle(){
         window.location.replace("/war_zone");
     }
 }
-setInterval(send_battle_list, 1000);
+setInterval(send_battle_list, 500);
 setInterval(find_battle, 1000);
