@@ -1,31 +1,12 @@
 const { json } = require("express");
 
-const randomCrusaderStuff = [
-    "Crusader armor evolved over time, starting with chainmail shirts and helmets in the early Crusades, and later incorporating plate armor during the later Crusades.",
-    "Chainmail, consisting of interlocking metal rings, was a common form of protection for Crusaders, providing flexibility and coverage against slashing attacks.",
-    "Crusader helmets varied in design but often included nasal helmets, which featured a nose guard for facial protection, or the iconic 'Great Helm,' a fully enclosed helmet with eye slits and a flat top.",
-    "Plate armor became more prevalent among Crusaders in the 12th and 13th centuries, offering superior protection against thrusting attacks and ranged weapons like arrows.",
-    "Crusader armor was often adorned with religious symbols such as crosses, indicating the wearer's devotion to Christianity and their participation in holy wars.",
-    "Shields were essential pieces of Crusader armor, providing additional protection in battle. They were typically made of wood, reinforced with metal rims and bosses for added durability.",
-    "Crusader knights sometimes wore surcoats over their armor, which displayed their heraldic symbols and helped identify them on the battlefield.",
-    "Crusader armor was expensive and typically only affordable for nobles and wealthier knights, limiting its availability to the upper echelons of Crusader society.",
-    "The weight of Crusader armor varied depending on its composition and design, with full suits of plate armor weighing anywhere from 40 to 60 pounds.",
-    "Despite advancements in armor technology, Crusaders still faced significant risks on the battlefield, including injury from blunt force trauma, exhaustion, and the limitations of their protective gear against certain weapons."
-  ];
-
 var socket = null;
-
-
-
-function randomText() {
-    document.getElementById("randomText").innerHTML = "<br/>"+randomCrusaderStuff[Math.floor(Math.random()*9)]
-}
 
 function updateOnlineList(data) {
     html = ""
     data = JSON.parse(data)
     for(const username of data){
-        html += "<span id='userName' style='height:2vh'>" + username + "</span>";
+        html += '<p style="margin: 1.5%;">'+username+'</p>'
     }
     const list = document.getElementById("onlineList");
     list.innerHTML = html
@@ -71,11 +52,6 @@ function welcome() {
     // setInterval(updateChat, 5000);
     createSocket();
 }
-
-// let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
-// let messageHTML = "<br><button class ='requestBattle' onclick='requestBattle(\"" + username + "\")'>Battle</button> ";
-//     messageHTML += "<span id='chat-messages'>"+username+ " | " + message + "</span>";
-
 function chatMessageHTML(messageJSON) {
     var username = messageJSON.username;
     var message = messageJSON.message;    
@@ -85,8 +61,7 @@ function chatMessageHTML(messageJSON) {
     if(downvote == 0){downvote = ""}
     var uid = messageJSON.id;
     var profile = messageJSON.profile;
-    let messageHTML = "<br><br><button class='chat-username'>" +username+"</button>";
-    messageHTML +="<span class='chat-messages'>"+message+"<button onclick='upvote("+uid+",\""+username+"\")' class='chat-upvote'>"+upvote+" ^</button> <button onclick='downvote("+uid+",\""+username+"\")' class='chat-downvote'>"+downvote+" v</button> <img src='"+profile+"' alt='image' class='profile_img'></span>";
+    let messageHTML = '<div class="chat_message"> <img src="' + profile + '"><button class="user_name" disabled>' + username + '</button><button class="user_message" disabled>' + message + '</button><button onclick="upvote(' + uid + ', \'' + username + '\')" class="chat-upvote">^</button><button onclick="downvote(' + uid + ', \'' + username + '\')" class="chat-downvote">' + downvote + ' v</button></div>'; 
     return messageHTML;   
 }
 function addMessageToChat(messageJSON) {
@@ -103,6 +78,7 @@ async function sendChat(){
     // create response based on what is expected at server chat messages
     if(socket){
         socket.emit("chat",{message:chatTextBox})
+        document.getElementById("chat-text-box").value = "";
     }else{
         const response = await fetch("/chat-messages",{
                 method: "POST",
