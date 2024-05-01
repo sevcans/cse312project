@@ -4,7 +4,6 @@ from flask import Response, make_response, request, send_from_directory, redirec
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
-import time
 import os
 import random
 import hashlib
@@ -51,7 +50,7 @@ def Saltgen(x):
 
 #Battle Gen
 def Characer_Gen():
-    character = {"player1": {"Health": 100, "Damage": 8, "image": "static/crusader.png"},
+    character = {"player1": {"Health": 100, "Damage": 8, "image": "/static/image/crusader.png"},
                 #  "player2": {"Health": 10, "Damage": 5, "image": "static/image/2.jpg"},
                 #  "player3": {"Health": 10, "Damage": 5, "image": "static/image/3.jpg"},
                 #  "player4": {"Health": 10, "Damage": 5, "image": "static/image/4.jpg"},
@@ -88,10 +87,10 @@ def MultiPage():
     user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
     res1 = war_zone.find_one({"player1": user['username']})
     res2  = war_zone.find_one({"player2": user['username']})
-    if 'auth' in request.cookies and user and request.cookies.get('auth') != '' and (res1 is not None or res2 is not None):
-        return render_template('warzone.html', UserName = user['username'])
-    else:
-        return redirect('/')
+    # if 'auth' in request.cookies and user and request.cookies.get('auth') != '' and (res1 is not None or res2 is not None):
+    return render_template('warzone.html', UserName = user['username'])
+    # else:
+    #     return redirect('/')
 
 @app.route("/home", methods=['GET'])
 def homePage():
@@ -199,7 +198,7 @@ def add_challenger():
     player2char = Characer_Gen()
     battle = {"player1": game['player1'],"player1_profile": game['player1_profile'], "player1char": player1char,"player1health": player1char.get('Health'),
               "player2": game['player2'],"player2_profile": game['player1_profile'],"player2char": player2char,"player2health": player2char.get('Health'),
-              "time": '',"p1move": False,"p2move": False}
+              "time": '',"p1move": False,"p2move": False, 'game_id': game_id, 'gamemess':'', 'cheater': '', 'time_exceed':''}
     war_zone.insert_one(battle)
     return jsonify({'message': 'Challenge Given'})
 
@@ -213,6 +212,100 @@ def findbattle():
         return jsonify({'message': 'War Found'})
     else:
         return jsonify({'message': 'No War'})
+    
+@app.route("/get_battle", methods=['GET'])
+def get_battle():
+    username = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+    user = ''
+    game = None
+    if war_zone.find_one({'player1':username}):
+        game = war_zone.find_one({'player1':username})
+        if game['time'] == '':
+            war_zone.update_one({'player1':username},{"$set": {"time": int(time.time())}})
+        user = "player1"
+    elif war_zone.find_one({'player2':username}):
+        game = war_zone.find_one({'player2':username})
+        if game['time'] == '':
+            war_zone.update_one({'player2':username},{"$set": {"time": int(time.time())}})
+        user = "player2"
+    battle = {'player1': game['player1'],'player1_profile': game['player1_profile'],'player1char': game['player1char'],'player1health': game['player1health'],
+              'player2': game['player2'],'player2_profile': game['player2_profile'],'player2char': game['player2char'],'player2health': game['player2health'],
+              'user':user, 'game_id': game['game_id'],"p1move": game['p1move'],"p2move": game['p2move']}
+    return jsonify(battle)
+
+@app.route("/forfeit", methods=['POST'])
+def forfeit():
+    username = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+    data = request.get_json()
+    game_id = data.get('id')
+    game = war_zone.find_one({'game_id': game_id})
+    if username == game['player1']:
+        # war_zone.delete_one({'game_id':game_id})
+        return jsonify({'message': username + ' Surrendered, You Win'})
+    else:
+        # war_zone.delete_one({'game_id':game_id})
+        return jsonify({'message': username + ' Surrendered, You Win'})
+
+@app.route("/attack", methods=['POST'])
+def attack():
+    username = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+    data = request.get_json()
+    game_id = data.get('match_id')
+    time = data.get('time')
+    game = war_zone.find_one({'game_id': game_id})
+    player = data.get('player')
+    user = data.get('player')
+    # check for modified values 
+    if player == 'p1':
+        player = game['player1']
+        if player != username:
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': 'player2'}})
+            return jsonify({'message': username + ' Cheated by Modifying value, Game aborted'})
+    elif player == 'p2':
+        player = game['player2']
+        if player != username:
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': 'player1'}})
+            return jsonify({'message': username + ' Cheated by Modifying value, Game aborted'})
+    else:
+        return jsonify({'message': username + ' Cheated by Modifying value, Game aborted'})
+
+    if user == 'p1':
+        war_zone.update_one({'game_id': game_id},{"$set": {'p1move': 'attack'}})
+    elif user == 'p2': 
+        war_zone.update_one({'game_id': game_id},{"$set": {'p2move': 'attack'}})
+        
+    return jsonify({'message': 'good','error': False})
+
+@app.route("/defend", methods=['POST'])
+def defend():
+    username = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
+    data = request.get_json()
+    game_id = data.get('match_id')
+    time = data.get('time')
+    game = war_zone.find_one({'game_id': game_id})
+    player = data.get('player')
+    user = data.get('player')
+    # check for modified values 
+    if player == 'p1':
+        player = game['player1']
+        if player != username:
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': 'player2'}})
+            return jsonify({'message': username + ' Cheated by Modifying value, Game aborted','error': True})
+    elif player == 'p2':
+        player = game['player2']
+        if player != username:
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': 'player1'}})
+            return jsonify({'message': username + ' Cheated by Modifying value, Game aborted','error': True})
+    else:
+        return jsonify({'message': username + ' Cheated by Modifying value, Game aborted','error': True})
+
+    if user == 'p1':
+        war_zone.update_one({'game_id': game_id},{"$set": {'p1move': 'defend'}})
+    elif user == 'p2': 
+        war_zone.update_one({'game_id': game_id},{"$set": {'p2move': 'defend'}})
+
+    return jsonify({'message': 'good','error': False})
+
 #LogOut
 @app.route("/logout", methods=['POST'])
 def Logout():
