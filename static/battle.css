@@ -233,3 +233,9 @@
     position: relative;
     top: 62%;
 }
+.Game_Rules{
+    position: absolute;
+    left: 1%;
+    top: 2%;
+    width: 29%;
+}

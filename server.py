@@ -177,12 +177,15 @@ def BattlePage():
 def MultiPage():
     #Checks Cookie and Auth if user exist
     user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
-    res1 = war_zone.find_one({"player1": user['username']})
-    res2  = war_zone.find_one({"player2": user['username']})
-    # if 'auth' in request.cookies and user and request.cookies.get('auth') != '' and (res1 is not None or res2 is not None):
-    return render_template('warzone.html', UserName = user['username'])
-    # else:
-    #     return redirect('/')
+    res1 = war_zone.find_one({"player1": user['username'], 'game_over': False})
+    res2  = war_zone.find_one({"player2": user['username'], 'game_over': False})
+    if 'auth' in request.cookies and user and request.cookies.get('auth') != '':
+        if res1 is not None or res2 is not None:
+            return render_template('warzone.html', UserName = user['username'])
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
 
 @app.route("/home", methods=['GET'])
 def homePage():

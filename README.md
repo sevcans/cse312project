@@ -31,3 +31,7 @@
     8b.repeat for p2 
 9. Go back to home
     9a. ensure that leaderboard is correct 
+10. when battle is done ensure that its gone from the battle list
+11. Restart another battle
+    8a. use p1 press forfeit button, Ensure result is correct
+    8b. repeat for p2 

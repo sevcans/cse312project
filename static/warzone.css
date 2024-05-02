@@ -154,3 +154,9 @@
     top:80%;
     font-size: 2.5vw;
 }
+.Game_Rules{
+    position: absolute;
+    left: 1%;
+    top: 3%;
+    width: 25%;
+}
