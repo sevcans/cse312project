@@ -125,21 +125,10 @@ function clearChat() {
     chatMessages.innerHTML = "";
 }
 
-async function logout(){
-    const response = await fetch("/logout",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        'X-Content-Type-Options': 'nosniff'
-      },
-    });
-    const content = await response.json();
-    console.log(response.json.message)
-    if (content.message == 'Logged Out Successful'){
-      window.location.replace("/");
-      document.getElementById('LogOutMessage').textContent = content.message;
-    }
-  }
+function logout(){
+    socket.emit("logout");
+    window.location.replace("/");
+}
 
   
 async function upvote(uid, username){

@@ -162,7 +162,9 @@ def game_logic(game_id,client_time):
 #when / is url returns index.html contents as home page and also calls on css/js files
 @app.route("/", methods=['GET'])
 def home():
-    return render_template('index.html')
+    response = make_response(render_template('index.html'))
+    response.set_cookie('auth', '', expires=0)
+    return response
  
 # Battle Page Rendering
 @app.route("/battle", methods=['GET'])
@@ -578,13 +580,20 @@ def handleChat(data):
     username = getUser(request)
     message = data.get('message')
     message = html.escape(message)
-    uid = random.randint(1,999999999)
-    entry = {"id":uid,"username":username, "message":message, "type":"chat","upvote":[],"downvote":[], 'profile': profile}
-    send = json.dumps(entry)
-    chat_collection.insert_one(entry)
-    emit('chat-event', send, broadcast=True)
-    
-    
+    if len(message) <= 57:
+        uid = random.randint(1,999999999)
+        entry = {"id":uid,"username":username, "message":message, "type":"chat","upvote":[],"downvote":[], 'profile': profile}
+        send = json.dumps(entry)
+        chat_collection.insert_one(entry)
+        emit('chat-event', send, broadcast=True)
+
+@socket.on('logout')
+def handlelogout():
+    user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
+    b_list.delete_one({"player1": user['username']})
+    userdata.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"auth_token": ''}})
+    onlineUsers.remove(user['username'])
+
 # add n sniff after
 @app.after_request
 def add_nosniff(response):
