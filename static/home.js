@@ -12,6 +12,16 @@ function updateOnlineList(data) {
     list.innerHTML = html
 }
 
+function leaderboard_list(data) {
+    html = ""
+    data = JSON.parse(data)
+    for(const username of data){
+        html += '<p style="margin: 1.5%;">'+username+'</p>'
+    }
+    const list = document.getElementById("leaderboard_list");
+    list.innerHTML = html
+}
+
 async function updateUserList() {
 
     const response = await fetch("/userList",{
@@ -37,6 +47,9 @@ function createSocket(){
         });
         socket.on("onlineList", (data) => {
             updateOnlineList(data)
+        });
+        socket.on("leaderboard", (data) => {
+            leaderboard_list(data)
         });
 }
 

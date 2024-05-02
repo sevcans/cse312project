@@ -1,38 +1,46 @@
 async function logout(){
-    const response = await fetch("/logout",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        'X-Content-Type-Options': 'nosniff'
-      },
-    });
-    const content = await response.json();
-    console.log(response.json.message)
-    if (content.message == 'Logged Out Successful'){
-      window.location.replace("/");
-      document.getElementById('LogOutMessage').textContent = content.message;
-    };
+    try{
+        const response = await fetch("/logout",{
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'X-Content-Type-Options': 'nosniff'
+            },
+          });
+          const content = await response.json();
+          console.log(response.json.message)
+          if (content.message == 'Logged Out Successful'){
+            window.location.replace("/");
+            document.getElementById('LogOutMessage').textContent = content.message;
+          };
+    }catch(error){
+        console.error('Error',error);
+    }
 }
 function home(){
     window.location.replace("/home");
 }
 
 async function add_battle(){
-    const response = await fetch("/add_battle",{
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          'X-Content-Type-Options': 'nosniff'
-        }
-      });
-    const content = await response.json();
-    var button = document.querySelector('.BattleButton');
-    button.disabled = true;
-    document.getElementById('Client_Message').textContent = content.message;
-    setTimeout(function(){
-        document.getElementById('Client_Message').textContent = "";
-        button.disabled = false;
-    }, 2000);
+    try{
+        const response = await fetch("/add_battle",{
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'X-Content-Type-Options': 'nosniff'
+            }
+          });
+        const content = await response.json();
+        var button = document.querySelector('.BattleButton');
+        button.disabled = true;
+        document.getElementById('Client_Message').textContent = content.message;
+        setTimeout(function(){
+            document.getElementById('Client_Message').textContent = "";
+            button.disabled = false;
+        }, 2000);
+    }catch(error){
+        console.error('Error',error);
+    }
 }
 
 function chatMessageHTML(messageJSON) {
@@ -63,41 +71,55 @@ function clearChat() {
 }
 
 async function send_battle_list() {
-    const response = await fetch("/send_battle_list",{
-    method: "GET",
-    headers:{
-        "Content-Type": "application/json",
-        'X-Content-Type-Options': 'nosniff'}        
-    });
-    clearChat();
-    const content = await response.json();
-    for(const message of content){
-        addMessageToChat(message);
+    try{
+        const response = await fetch("/send_battle_list",{
+            method: "GET",
+            headers:{
+                "Content-Type": "application/json",
+                'X-Content-Type-Options': 'nosniff'}        
+            });
+            clearChat();
+            const content = await response.json();
+            for(const message of content){
+                addMessageToChat(message);
+            }
+    }catch(error){
+        console.error("Error",error)
     }
 }
 async function add_battle_challenger(battle_id){
-    const response = await fetch("/add_challenger",{
-        method: "POST",
-        headers:{
-            "Content-Type": "application/json",
-            'X-Content-Type-Options': 'nosniff'},
-        body: JSON.stringify({
-            "game_id":battle_id
-          })      
-        });
-        const content = await response.json();
-}
-async function find_battle(){
-    const response = await fetch("/find_battle",{
-        method: "POST",
-        headers:{
-            "Content-Type": "application/json",
-            'X-Content-Type-Options': 'nosniff'},
-        });
-        const content = await response.json();
-    if(content.message == "War Found"){
-        window.location.replace("/war_zone");
+    try{
+        const response = await fetch("/add_challenger",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+                'X-Content-Type-Options': 'nosniff'},
+            body: JSON.stringify({
+                "game_id":battle_id
+              })      
+            });
+            const content = await response.json();
+    }catch(error){
+        console.error("Error:", error);
     }
 }
-setInterval(send_battle_list, 500);
-setInterval(find_battle, 1000);
+async function find_battle(){
+    try{
+        const response = await fetch("/find_battle",{
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+                'X-Content-Type-Options': 'nosniff'},
+            });
+            const content = await response.json();
+        if(content.message == "War Found"){
+            window.location.replace("/war_zone");
+        }
+    }catch(error){
+        console.error("Error:", error);
+    }
+}
+send_battle_list();
+find_battle();
+// setInterval(send_battle_list, 1000);
+// setInterval(find_battle, 1000);

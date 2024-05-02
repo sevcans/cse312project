@@ -13,7 +13,6 @@ async function forfeit(){
         });
         if(response.ok){
             const content = await response.json();
-            console.log(content)
             document.getElementById("p1_attack_button").style.opacity = "0";
             document.getElementById("p1_defense_button").style.opacity = "0";
             document.getElementById("p1_attack_button").style.cursor = "";
@@ -202,6 +201,7 @@ async function attack(player){
         if(response.ok){
             const data = await response.json();
             if(data.error == true){
+                console.log(data)
                 document.getElementById('Server_Mess1').textContent = data.servmess;
                 document.getElementById('Server_Mess2').textContent = 'Redirecting to Battle Page in 5 Seconds';
                 clearInterval(intervalID);
@@ -376,8 +376,6 @@ async function update_battle(){
                 setTimeout(function() {
                     window.location.replace("/battle");
                 }, 5000);
-            }else{
-
             }
         }
     }catch(error){

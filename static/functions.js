@@ -67,7 +67,6 @@ async function Login(){
   //display message
   const content = await response.json();
   document.getElementById('LoginMessage').textContent = content.message;
-
   //redirect
   if (content.message == 'Login successful'){
     window.location.replace("/home");
