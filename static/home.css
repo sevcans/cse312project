@@ -50,8 +50,7 @@ body {
     position:absolute;
     text-align: center;
     overflow-y: scroll;
-    border-left: 2px solid black;
-    height: 83%;
+    height: 70%;
     top:16.5%;
     width: 14.2%;
     right: 0;
@@ -157,4 +156,11 @@ body {
     color: black;
     font-size: larger;
     overflow-y: scroll;
+}
+.rightside_line{
+    position: absolute;
+    border-right: 2px solid black;
+    height: 83%;
+    top:16.5%;
+    right:14.2%;
 }

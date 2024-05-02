@@ -119,7 +119,5 @@ async function find_battle(){
         console.error("Error:", error);
     }
 }
-send_battle_list();
-find_battle();
-// setInterval(send_battle_list, 1000);
-// setInterval(find_battle, 1000);
+setInterval(send_battle_list, 1000);
+setInterval(find_battle, 1000);
