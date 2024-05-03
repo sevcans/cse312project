@@ -119,5 +119,16 @@ async function find_battle(){
         console.error("Error:", error);
     }
 }
+function rule_show() {
+    var rules = document.querySelector('.Rules');
+    var computedStyle = window.getComputedStyle(rules);
+    var opacity = parseFloat(computedStyle.getPropertyValue('opacity'));
+
+    if (opacity === 1) {
+        rules.style.opacity = 0;
+    } else {
+        rules.style.opacity = 1;
+    }
+}
 setInterval(send_battle_list, 1000);
 setInterval(find_battle, 1000);

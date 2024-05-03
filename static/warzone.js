@@ -382,6 +382,18 @@ async function update_battle(){
         console.error("Error:", error);
     }
 }
+function rule_show() {
+    var rules = document.querySelector('.Rules');
+    var computedStyle = window.getComputedStyle(rules);
+    var opacity = parseFloat(computedStyle.getPropertyValue('opacity'));
+
+    if (opacity === 1) {
+        rules.style.opacity = 0;
+    } else {
+        rules.style.opacity = 1;
+    }
+}
+
 update_battle();
 
 var intervalID = setInterval(update_battle, 500);

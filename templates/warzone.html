@@ -7,14 +7,16 @@
 
     <body onload="get_battle()">
         <div class="Game_Rules">
-            <h3 style="margin: 0;margin-top: 4%;margin-bottom: 2%;font-size: 1.7vw;">Rules</h3>
-                <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">Battle to the Death</li>
-                <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">You have 60 seconds to make a move</li>
-                <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">If you fail to make a move, you lose</li>
-                <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">If both players Die no one Win</li>
+            <button style="margin: 0;margin-top: 4%;margin-bottom: 2%;font-size: 1.7vw;background-color: rgb(48, 170, 218);border: none;color: white;cursor: pointer;border-radius: 1vw;width: 6vw;" onclick="rule_show()">Rules</button>
+                <div class="Rules">
+                    <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">Battle to the Death</li>
+                    <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">You have 60 seconds to make a move</li>
+                    <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">If you fail to make a move, you lose</li>
+                    <li style="margin: 0;margin-left: 6%;font-size: 1.3vw;">If both players Die no one Win</li>
+                </div>
         </div>
         <div class="DisplayUsername">
-            <h3 id="Display_User" >{{UserName}}</h3>
+            <h3 id="Display_User" class="user_name">{{UserName}}</h3>
             <button class="forfeit-button" onclick="forfeit()">Forfeit</button>
         </div>
 

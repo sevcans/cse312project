@@ -1,3 +1,6 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
 .Battle_Title{
     position: absolute;
     left: 50%;
@@ -35,8 +38,8 @@
 .player1_char_image{
     position: relative;
     justify-content: center;
-    width: 44%;
-    height: auto;
+    width: auto;
+    height: 70%;
     top:2%;
 }
 .player1char_detail{
@@ -92,8 +95,8 @@
 }
 .player2_char_image{
     position: relative;
-    width: 44%;
-    height: auto;
+    width: auto;
+    height: 70%;
     top:2%;
 }
 .player2char_detail{
@@ -158,5 +161,11 @@
     position: absolute;
     left: 1%;
     top: 3%;
-    width: 25%;
+    width: 26%;
+}
+.Rules{
+    opacity: 1;
+}
+.user_name{
+    text-align: right;
 }
