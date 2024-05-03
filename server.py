@@ -72,15 +72,13 @@ def Characer_Gen():
 def game_logic(game_id,client_time):
     game = war_zone.find_one({'game_id':game_id})
     server_time = game['time']
-    event = ''
-
     f"{game['player2']} failed to make a move"
 
     if game['cheater'] != '':
         return
     if client_time - server_time > 59:
         if game['p1move'] != False and game['p2move'] == False:
-            war_zone.update_one({'game_id':game_id},{"$set":{"game_over": True, "gamemess": f'{game['player2']} failed to make a move, {+game['player1']}has won the Battle'}})
+            war_zone.update_one({'game_id':game_id},{"$set":{"game_over": True, "gamemess": f'{game['player2']} failed to make a move, {game['player1']}has won the Battle'}})
             if leader_b.find_one({'player': game['player1']}) is None:
                 leader_b.insert_one({'player': game['player1'], 'win':1})
             else:
@@ -162,6 +160,7 @@ def game_logic(game_id,client_time):
             elif player1_move == 'defend' and player2_move == 'defend':
                 war_zone.update_one({'game_id':game_id},{"$set":{'p1move': False, 'p2move': False, 'time': int(time.time()),'lround': f'Round {curr_round}: Both players defended', 'round': new_round}})
         return
+
 #when / is url returns index.html contents as home page and also calls on css/js files
 @app.route("/", methods=['GET'])
 def home():
@@ -244,24 +243,24 @@ def login():
     pw = data.get('password')
     if username == "" or pw == "":
         return jsonify({'message': 'Credentials Missing'})
-    #Search database
+    # Search database
     if userdata.find_one({"username": username}):
-       #Get the credentials from Database
-       authpass = userdata.find_one({"username": username})['password']
-       salt = userdata.find_one({"username": username})['salt']
-       #Generate new token
-       hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
-       #Check PW
-       if authpass == hashpass:
-        #Update auth token
-        auth_cookie = salt[15:40]
-        hash_cookie = hashlib.sha256((auth_cookie).encode('utf-8')).hexdigest()
-        userdata.update_one({"username": username, "password":hashpass},{"$set":{"auth_token": hash_cookie}})
-        response = make_response(jsonify({'message': 'Login successful'}))
-        response.set_cookie('auth', auth_cookie, httponly=True, max_age=7200)
-        return response
-       else:
-           return jsonify({'message': 'Password or Username Incorrect'})
+        # Get the credentials from Database
+        authpass = userdata.find_one({"username": username})['password']
+        salt = userdata.find_one({"username": username})['salt']
+        # Generate new token
+        hashpass = hashlib.sha256((pw+salt).encode('utf-8')).hexdigest()
+        # Check PW
+        if authpass == hashpass:
+            # Update auth token
+            auth_cookie = salt[15:40]
+            hash_cookie = hashlib.sha256((auth_cookie).encode('utf-8')).hexdigest()
+            userdata.update_one({"username": username, "password":hashpass},{"$set":{"auth_token": hash_cookie}})
+            response = make_response(jsonify({'message': 'Login successful'}))
+            response.set_cookie('auth', auth_cookie, httponly=True, max_age=7200)
+            return response
+        else:
+            return jsonify({'message': 'Password or Username Incorrect'})
     else:
         return jsonify({'message': 'Password or Username Incorrect'})
 
@@ -541,22 +540,6 @@ def image_upload():
         userdata.update_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"$set":{"profile_pic": (app.config['UPLOAD_FOLDER']+filename)}})
         return redirect("/profile")
     
-# @app.route("/getUser", methods=['GET'])
-# def getUser():
-#     data = request.get_json()
-#     userchat= data.get('username')    
-#     user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()},{"username":userchat})
-#     username = user['username']
-#     if(username==userchat):
-#         response = make_response(jsonify({'status':'match'}))
-#         response.status_code = 200
-#         response.mimetype = 'application/json'
-#     else:
-#         response = make_response(jsonify({'status':'nomatch'}))
-#         response.status_code = 200
-#         response.mimetype = 'application/json'
-    
-#     return response
 def getUser(req):
     return userdata.find_one({"auth_token": hashlib.sha256((req.cookies.get('auth')).encode('utf-8')).hexdigest()})['username']
 
@@ -579,7 +562,6 @@ def handle_disconnect():
     user = getUser(request)
     onlineUsers.remove(user)
     emit("onlineList",json.dumps(onlineUsers),broadcast=True)
-
 
 @socket.on('chat')
 def handleChat(data):
