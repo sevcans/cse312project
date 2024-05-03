@@ -74,18 +74,20 @@ def game_logic(game_id,client_time):
     server_time = game['time']
     event = ''
 
+    f"{game['player2']} failed to make a move"
+
     if game['cheater'] != '':
         return
     if client_time - server_time > 59:
         if game['p1move'] != False and game['p2move'] == False:
-            war_zone.update_one({'game_id':game_id},{"$set":{"game_over": True, "gamemess": game['player2']+' failed to make a move, '+game['player1']+' has won the Battle'}})
+            war_zone.update_one({'game_id':game_id},{"$set":{"game_over": True, "gamemess": f'{game['player2']} failed to make a move, {+game['player1']}has won the Battle'}})
             if leader_b.find_one({'player': game['player1']}) is None:
                 leader_b.insert_one({'player': game['player1'], 'win':1})
             else:
                 leader_b.update_one({'player': game['player1']},{"$set":{'win': leader_b.find_one({'player': game['player1']})['win']+1}})
             return
         elif game['p1move'] == False and game['p2move'] != False:
-            war_zone.update_one({'game_id':game_id},{"$set":{"game_over": True, "gamemess": game['player1']+' failed to make a move, '+game['player2']+' has won the Battle'}})
+            war_zone.update_one({'game_id':game_id},{"$set":{"game_over": True, "gamemess": f'{game['player1']} failed to make a move, {game['player2']} has won the Battle'}})
             if leader_b.find_one({'player': game['player2']}) is None:
                 leader_b.insert_one({'player': game['player2'], 'win':1})
             else:
@@ -104,9 +106,9 @@ def game_logic(game_id,client_time):
         if player1_move == False and player2_move == False:
             war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": 'Both players need to make a move'}})
         elif player1_move == False and player2_move != False:
-            war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": 'Waiting for '+player1_name+' to make a move'}})
+            war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": f'Waiting for {player1_name} to make a move'}})
         elif player1_move != False and player2_move == False:
-            war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": 'Waiting for '+player2_name+' to make a move'}})
+            war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": f'Waiting for {player2_name} to make a move'}})
         else:
             curr_round = game['round']
             new_round =  curr_round + 1
@@ -122,43 +124,43 @@ def game_logic(game_id,client_time):
                 if player1_health <= 0 and player2_health <= 0:
                     war_zone.update_one({'game_id':game_id},{"$set":{'player1health': 0, 'player2health': 0, "gamemess": 'Both players has died in battle','game_over':True, 'round': new_round}})
                 elif player1_health <= 0 and player2_health > 0:
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health': 0, 'player2health': player2_health, "gamemess": player2_name+' has won the battle','game_over':True, 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health': 0, 'player2health': player2_health, "gamemess": f'{player2_name} has won the battle','game_over':True, 'round': new_round}})
                     if leader_b.find_one({'player': game['player2']}) is None:
                         leader_b.insert_one({'player': game['player2'], 'win':1})
                     else:
                         leader_b.update_one({'player': game['player2']},{"$set":{'win': leader_b.find_one({'player': game['player2']})['win']+1}})
                 elif player1_health > 0 and player2_health <=0:
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player2health': 0, 'player1health': player1_health, "gamemess": player1_name+' has won the battle','game_over':True, 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player2health': 0, 'player1health': player1_health, "gamemess": f'{player1_name} has won the battle','game_over':True, 'round': new_round}})
                     if leader_b.find_one({'player': game['player1']}) is None:
                         leader_b.insert_one({'player': game['player1'], 'win':1})
                     else:
                         leader_b.update_one({'player': game['player1']},{"$set":{'win': leader_b.find_one({'player': game['player1']})['win']+1}})
                 else:
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health, 'player2health':player2_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),'lround': 'Round '+str(curr_round)+': Both players attacked', 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health, 'player2health':player2_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),'lround': f'Round {curr_round}: Both players attacked', 'round': new_round}})
             elif player1_move == 'attack' and player2_move == 'defend':
                 player2_health = player2_health - (player1_Damage/2)
                 if player2_health < 0:
                     player1_health = 0
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health,"gamemess": player1_name+' has won the battle','game_over':True, 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health,"gamemess": f'{player1_name} has won the battle','game_over':True, 'round': new_round}})
                     if leader_b.find_one({'player': game['player1']}) is None:
                         leader_b.insert_one({'player': game['player1'], 'win':1})
                     else:
                         leader_b.update_one({'player': game['player1']},{"$set":{'win': leader_b.find_one({'player': game['player1']})['win']+1}})
                 else:
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player2health':player2_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),"lround": 'Round '+str(curr_round)+': '+player1_name+' Attacked, '+player2_name+' Defended', 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player2health':player2_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),"lround": f'Round {curr_round}): {player1_name} Attacked, {player2_name} Defended', 'round': new_round}})
             elif player1_move == 'defend' and player2_move == 'attack':
                 player1_health = player1_health - (player2_Damage/2)
                 if player1_health < 0:
                     player1_health = 0
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),"gamemess": player2_name+' has won the battle', 'game_over':True, 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),"gamemess": f'{player2_name} has won the battle', 'game_over':True, 'round': new_round}})
                     if leader_b.find_one({'player': game['player2']}) is None:
                         leader_b.insert_one({'player': game['player2'], 'win':1})
                     else:
                         leader_b.update_one({'player': game['player2']},{"$set":{'win': leader_b.find_one({'player': game['player2']})['win']+1}})
                 else:
-                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),"lround": 'Round '+str(curr_round)+': '+player1_name+' Defended, '+player2_name+' Attacked', 'round': new_round}})
+                    war_zone.update_one({'game_id':game_id},{"$set":{'player1health':player1_health, 'p1move': False, 'p2move': False, 'time': int(time.time()),"lround": f'Round {curr_round}: {player1_name} Defended, {player2_name} Attacked', 'round': new_round}})
             elif player1_move == 'defend' and player2_move == 'defend':
-                war_zone.update_one({'game_id':game_id},{"$set":{'p1move': False, 'p2move': False, 'time': int(time.time()),'lround': 'Round '+str(curr_round)+': Both players defended', 'round': new_round}})
+                war_zone.update_one({'game_id':game_id},{"$set":{'p1move': False, 'p2move': False, 'time': int(time.time()),'lround': f'Round {curr_round}: Both players defended', 'round': new_round}})
         return
 #when / is url returns index.html contents as home page and also calls on css/js files
 @app.route("/", methods=['GET'])
@@ -344,8 +346,8 @@ def forfeit():
     game_id = data.get('id')
     game = war_zone.find_one({'game_id': game_id})
     if username == game['player1']:
-        war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": game['player1']+' has Forfeit the battle, '+game['player2']+' Won','game_over':True}})
-        return jsonify({'servmess': game['player1']+' has Forfeit the battle, '+game['player2']+' Won','gover': True})
+        war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": f'{game['player1']} has Forfeit the battle, {game['player2']} Won','game_over':True}})
+        return jsonify({'servmess': f'{game['player1']} has Forfeit the battle, {game['player2']} Won','gover': True})
     else:
         war_zone.update_one({'game_id':game_id},{"$set":{"gamemess": game['player2']+' has Forfeit the battle, '+game['player1']+' Won','game_over':True}})
         return jsonify({'servmess': game['player2']+' has Forfeit the battle, '+game['player1']+' Won','gover': True})
@@ -362,16 +364,16 @@ def attack():
     if player == 'p1':
         player = game['player1']
         if player != username:
-            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': username + ' Cheated by Modifying value, Game aborted', 'gamemess':username + ' Cheated by Modifying value, Game aborted', 'game_over': True}})
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
             return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
     elif player == 'p2':
         player = game['player2']
         if player != username:
-            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': username + ' Cheated by Modifying value, Game aborted', 'gamemess':username + ' Cheated by Modifying value, Game aborted', 'game_over': True}})
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
             return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
     else:
-        war_zone.update_one({'game_id': game_id},{"$set": {'cheater': username + ' Cheated by Modifying value, Game aborted', 'gamemess':username + ' Cheated by Modifying value, Game aborted', 'game_over': True}})
-        return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
+        war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
+        return jsonify({'servmess':f'{username} Cheated by Modifying value, Game aborted', 'error': True})
     
     if user == 'p1':        
         war_zone.update_one({'game_id': game_id},{"$set": {'p1move': 'attack'}})
@@ -392,16 +394,16 @@ def defend():
     if player == 'p1':
         player = game['player1']
         if player != username:
-            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': username + ' Cheated by Modifying value, Game aborted', 'gamemess':username + ' Cheated by Modifying value, Game aborted', 'game_over': True}})
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
             return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
     elif player == 'p2':
         player = game['player2']
         if player != username:
-            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': username + ' Cheated by Modifying value, Game aborted', 'gamemess':username + ' Cheated by Modifying value, Game aborted', 'game_over': True}})
+            war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
             return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
     else:
-        war_zone.update_one({'game_id': game_id},{"$set": {'cheater': username + ' Cheated by Modifying value, Game aborted', 'gamemess':username + ' Cheated by Modifying value, Game aborted', 'game_over': True}})
-        return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
+        war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
+        return jsonify({'servmess': f'{username} Cheated by Modifying value, Game aborted', 'error': True})
 
     if user == 'p1':
         war_zone.update_one({'game_id': game_id},{"$set": {'p1move': 'defend'}})
