@@ -268,7 +268,7 @@ def add_battle():
     user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
     battle_id = Saltgen(8)
     if b_list.find_one({'player1': user['username']}) == None:
-        b_list.insert_one({'player1': user['username'],'player1_profile': user['profile_pic'],'player2' : '','player2_profile': '','battle_id': battle_id})
+        b_list.insert_one({'player1': user['username'],'player1_profile': user['profile_pic'],'player2' : '','player2_profile': '','battle_id': battle_id, 'time': int(time.time())})
         return jsonify({'message': 'Battle Added'})
     else:
         return jsonify({'message': 'Challenge Given'})
@@ -276,7 +276,11 @@ def add_battle():
 @app.route("/send_battle_list", methods=['GET'])
 def send_battle():
     battle_list = []
-    for i in b_list.find({},{ "_id": 0, "player1": 1, "player1_profile": 1 ,"player2": 1, "player2_profile": 1 ,"battle_id":1}):
+
+    for i in b_list.find({},{ "_id": 0, "player1": 1, "player1_profile": 1 ,"player2": 1, "player2_profile": 1 ,"battle_id":1, 'time':1}):
+        if time.time()-i['time'] >= 299:
+            b_list.delete_one(i)
+        i.pop('time')
         battle_list.append(i)
     response = make_response(jsonify(battle_list))
     response.status_code = 200
