@@ -117,4 +117,7 @@ function rule_show() {
         rules.style.opacity = 1;
     }
 }
+function profile_redirect() {
+    window.location.replace("/profile");
+}
 setInterval(send_battle_list,1000);
