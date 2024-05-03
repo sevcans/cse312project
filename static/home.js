@@ -74,7 +74,7 @@ function chatMessageHTML(messageJSON) {
     if(downvote == 0){downvote = ""}
     var uid = messageJSON.id;
     var profile = messageJSON.profile;
-    let messageHTML = '<div class="chat_message"> <img src="' + profile + '"><button class="user_name" disabled>' + username + '</button><button class="user_message" disabled>' + message + '</button><button onclick="upvote(' + uid + ', \'' + username + '\')" class="chat-upvote">^</button><button onclick="downvote(' + uid + ', \'' + username + '\')" class="chat-downvote">' + downvote + ' v</button></div>'; 
+    let messageHTML = '<div class="chat_message"> <img src="' + profile + '" style="margin-top: -.5%; border-radius: 50%;width: 3vw;height: 3vw;object-fit: cover;"><button class="user_name" disabled>' + username + '</button><button class="user_message" disabled>' + message + '</button><button onclick="upvote(' + uid + ', \'' + username + '\')" class="chat-upvote">^</button><button onclick="downvote(' + uid + ', \'' + username + '\')" class="chat-downvote">' + downvote + ' v</button></div>'; 
     return messageHTML;   
 }
 function addMessageToChat(messageJSON) {

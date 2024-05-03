@@ -50,21 +50,21 @@ def Saltgen(x):
     return chars
 #Battle Gen
 def Characer_Gen():
-    character = { "player1": {"Health": 20, "Damage": 16, "image": "static/image/crusader/1.png"},
-                #   "player2": {"Health": 72, "Damage": 20, "image": "static/image/crusader/2.png"},
-                #   "player3": {"Health": 74, "Damage": 14, "image": "static/image/crusader/3.png"},
-                #   "player4": {"Health": 62, "Damage": 22, "image": "static/image/crusader/4.png"},
-                #   "player5": {"Health": 76, "Damage": 18, "image": "static/image/crusader/5.png"},
-                #   "player6": {"Health": 70, "Damage": 12, "image": "static/image/crusader/6.png"},
-                #   "player7": {"Health": 68, "Damage": 24, "image": "static/image/crusader/7.png"},
-                #   "player8": {"Health": 64, "Damage": 20, "image": "static/image/crusader/8.png"},
-                #   "player9": {"Health": 78, "Damage": 16, "image": "static/image/crusader/9.png"},
-                #   "player10": {"Health": 76, "Damage": 14, "image": "static/image/crusader/10.png"},
-                #   "player11": {"Health": 66, "Damage": 12, "image": "static/image/crusader/11.png"},
-                #   "player12": {"Health": 70, "Damage": 24, "image": "static/image/crusader/12.png"},
-                #   "player13": {"Health": 68, "Damage": 18, "image": "static/image/crusader/13.png"},
-                #   "player14": {"Health": 62, "Damage": 22, "image": "static/image/crusader/14.png"},
-                #   "player15": {"Health": 74, "Damage": 20, "image": "static/image/crusader/15.png"}
+    character = { "player1": {"Health": 66, "Damage": 16, "image": "static/image/crusader/1.png"},
+                  "player2": {"Health": 72, "Damage": 20, "image": "static/image/crusader/2.png"},
+                  "player3": {"Health": 74, "Damage": 14, "image": "static/image/crusader/3.png"},
+                  "player4": {"Health": 62, "Damage": 22, "image": "static/image/crusader/4.png"},
+                  "player5": {"Health": 76, "Damage": 18, "image": "static/image/crusader/5.png"},
+                  "player6": {"Health": 70, "Damage": 12, "image": "static/image/crusader/6.png"},
+                  "player7": {"Health": 68, "Damage": 24, "image": "static/image/crusader/7.png"},
+                  "player8": {"Health": 64, "Damage": 20, "image": "static/image/crusader/8.png"},
+                  "player9": {"Health": 78, "Damage": 16, "image": "static/image/crusader/9.png"},
+                  "player10": {"Health": 76, "Damage": 14, "image": "static/image/crusader/10.png"},
+                  "player11": {"Health": 66, "Damage": 12, "image": "static/image/crusader/11.png"},
+                  "player12": {"Health": 70, "Damage": 24, "image": "static/image/crusader/12.png"},
+                  "player13": {"Health": 68, "Damage": 18, "image": "static/image/crusader/13.png"},
+                  "player14": {"Health": 62, "Damage": 22, "image": "static/image/crusader/14.png"},
+                  "player15": {"Health": 74, "Damage": 20, "image": "static/image/crusader/15.png"}
                 }
     return random.choice(list(character.values()))
 
@@ -279,7 +279,7 @@ def send_battle():
     user = userdata.find_one({"auth_token": hashlib.sha256((request.cookies.get('auth')).encode('utf-8')).hexdigest()})
     war_zone.delete_one({"player1": user['username'], 'game_over': True})
     war_zone.delete_one({"player2": user['username'], 'game_over': True})
-    
+
     res1 = war_zone.find_one({"player1": user['username'], 'game_over': False})
     res2  = war_zone.find_one({"player2": user['username'], 'game_over': False})
     if res1 is not None or res2 is not None:
@@ -304,6 +304,8 @@ def add_challenger():
         b_list.delete_one({"player1":user['username']})
     player1char = Characer_Gen()
     player2char = Characer_Gen()
+    while player1char == player2char:
+        player2char = Characer_Gen()
     battle = {"player1": game['player1'],"player1_profile": game['player1_profile'], "player1char": player1char,"player1health": player1char.get('Health'),
               "player2": game['player2'],"player2_profile": game['player2_profile'],"player2char": player2char,"player2health": player2char.get('Health'),
               "time": '',"p1move": False,"p2move": False, 'game_id': game_id, 'gamemess':'', 'lround':'','cheater': '','game_over': False, 'round': 1}
@@ -367,12 +369,12 @@ def attack():
         player = game['player1']
         if player != username:
             war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
-            return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
+            return jsonify({'servmess': f'{username} Cheated by Modifying value, Game aborted', 'error': True})
     elif player == 'p2':
         player = game['player2']
         if player != username:
             war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
-            return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
+            return jsonify({'servmess': f'{username} Cheated by Modifying value, Game aborted', 'error': True})
     else:
         war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
         return jsonify({'servmess':f'{username} Cheated by Modifying value, Game aborted', 'error': True})
@@ -397,12 +399,12 @@ def defend():
         player = game['player1']
         if player != username:
             war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
-            return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
+            return jsonify({'servmess': f'{username} Cheated by Modifying value, Game aborted', 'error': True})
     elif player == 'p2':
         player = game['player2']
         if player != username:
             war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
-            return jsonify({'servmess': username + ' Cheated by Modifying value, Game aborted', 'error': True})
+            return jsonify({'servmess': f'{username} Cheated by Modifying value, Game aborted', 'error': True})
     else:
         war_zone.update_one({'game_id': game_id},{"$set": {'cheater': f'{username} Cheated by Modifying value, Game aborted', 'gamemess': f'{username} Cheated by Modifying value, Game aborted', 'game_over': True}})
         return jsonify({'servmess': f'{username} Cheated by Modifying value, Game aborted', 'error': True})

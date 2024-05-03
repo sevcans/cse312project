@@ -29,7 +29,7 @@ body{
     height: 5vh;
     left: 50%;
     transform: translateX(-50%);
-    text-align: center;
+    justify-content: center;
 }
 .player1_profile{
     position: relative;
@@ -91,7 +91,7 @@ body{
     height: 5vh;
     left: 50%;
     transform: translateX(-50%);
-    text-align: center;
+    justify-content: center;
 }
 .player2_char_image{
     position: relative;
@@ -164,7 +164,7 @@ body{
     width: 26%;
 }
 .Rules{
-    opacity: 1;
+    opacity: 0;
 }
 .user_name{
     text-align: right;
