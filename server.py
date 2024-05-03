@@ -51,21 +51,22 @@ def Saltgen(x):
 
 #Battle Gen
 def Characer_Gen():
-    character = {"player1": {"Health": 10, "Damage": 8, "image": "/static/image/crusader.png"},
-                #  "player2": {"Health": 10, "Damage": 5, "image": "static/image/2.jpg"},
-                #  "player3": {"Health": 10, "Damage": 5, "image": "static/image/3.jpg"},
-                #  "player4": {"Health": 10, "Damage": 5, "image": "static/image/4.jpg"},
-                #  "player5": {"Health": 10, "Damage": 5, "image": "static/image/5.jpg"},
-                #  "player6": {"Health": 10, "Damage": 5, "image": "static/image/6.jpg"},
-                #  "player7": {"Health": 10, "Damage": 5, "image": "static/image/7.jpg"},
-                #  "player8": {"Health": 10, "Damage": 5, "image": "static/image/8.jpg"},
-                #  "player9": {"Health": 10, "Damage": 5, "image": "static/image/9.jpg"},
-                #  "player10": {"Health": 10, "Damage": 5, "image": "static/image/10.jpg"},
-                #  "player11": {"Health": 10, "Damage": 5, "image": "static/image/11.jpg"},
-                #  "player12": {"Health": 10, "Damage": 5, "image": "static/image/12.jpg"},
-                #  "player14": {"Health": 10, "Damage": 5, "image": "static/image/13.jpg"},
-                #  "player14": {"Health": 10, "Damage": 5, "image": "static/image/14.jpg"},
-                 }
+    character = { "player1": {"Health": 66, "Damage": 16, "image": "static/image/crusader/1.png"},
+                  "player2": {"Health": 72, "Damage": 20, "image": "static/image/crusader/2.png"},
+                  "player3": {"Health": 74, "Damage": 14, "image": "static/image/crusader/3.png"},
+                  "player4": {"Health": 62, "Damage": 22, "image": "static/image/crusader/4.png"},
+                  "player5": {"Health": 76, "Damage": 18, "image": "static/image/crusader/5.png"},
+                  "player6": {"Health": 70, "Damage": 12, "image": "static/image/crusader/6.png"},
+                  "player7": {"Health": 68, "Damage": 24, "image": "static/image/crusader/7.png"},
+                  "player8": {"Health": 64, "Damage": 20, "image": "static/image/crusader/8.png"},
+                  "player9": {"Health": 78, "Damage": 16, "image": "static/image/crusader/9.png"},
+                  "player10": {"Health": 76, "Damage": 14, "image": "static/image/crusader/10.png"},
+                  "player11": {"Health": 66, "Damage": 12, "image": "static/image/crusader/11.png"},
+                  "player12": {"Health": 70, "Damage": 24, "image": "static/image/crusader/12.png"},
+                  "player13": {"Health": 68, "Damage": 18, "image": "static/image/crusader/13.png"},
+                  "player14": {"Health": 62, "Damage": 22, "image": "static/image/crusader/14.png"},
+                  "player15": {"Health": 74, "Damage": 20, "image": "static/image/crusader/15.png"}
+                }
     return random.choice(list(character.values()))
 
 def game_logic(game_id,client_time):
