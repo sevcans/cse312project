@@ -134,10 +134,10 @@ body{
 .forfeit-button{
     position: absolute;
     top: 6vh;
-    right: 1vw;
     font-size: 1.4vw;
-    width: 6vw;
-    height: 2.8vh;
+    right: 0;
+    width: 5.2vw;
+    height: 2.9vh;
     background-color: rgb(48, 170, 218);
     border: none;
     color: white;

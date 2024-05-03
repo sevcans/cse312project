@@ -80,7 +80,10 @@ async function send_battle_list() {
             });
             clearChat();
             const content = await response.json();
-            for(const message of content){
+            if(content.war == true){
+                window.location.replace("/war_zone");
+            }
+            for(const message of content.message){
                 addMessageToChat(message);
             }
     }catch(error){
@@ -103,22 +106,6 @@ async function add_battle_challenger(battle_id){
         console.error("Error:", error);
     }
 }
-async function find_battle(){
-    try{
-        const response = await fetch("/find_battle",{
-            method: "POST",
-            headers:{
-                "Content-Type": "application/json",
-                'X-Content-Type-Options': 'nosniff'},
-            });
-            const content = await response.json();
-        if(content.message == "War Found"){
-            window.location.replace("/war_zone");
-        }
-    }catch(error){
-        console.error("Error:", error);
-    }
-}
 function rule_show() {
     var rules = document.querySelector('.Rules');
     var computedStyle = window.getComputedStyle(rules);
@@ -130,5 +117,4 @@ function rule_show() {
         rules.style.opacity = 1;
     }
 }
-setInterval(send_battle_list, 1000);
-setInterval(find_battle, 1000);
+setInterval(send_battle_list,1000);
