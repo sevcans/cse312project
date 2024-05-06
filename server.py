@@ -17,11 +17,7 @@ import json
 app = Flask(__name__)
 socket = SocketIO(app)
 
-def test():
-    print("yes i got here")
-    return 1
-
-limiter = Limiter(test,app=app,application_limits=["50 per minute"],default_limits_per_method=True)     # this limiter only counts refresh as one request but works fine otherwise.
+limiter = Limiter(get_remote_address,app=app,application_limits=["50 per minute"],default_limits_per_method=True)     # this limiter only counts refresh as one request but works fine otherwise.
                                                                                                         # so spamming refresh 50 times will trigger this but so will spamming login, even when refresh has 4 requests.
 
 #DataBase
