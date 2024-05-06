@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask import render_template
 from flask import Response, make_response, request, send_from_directory, redirect, jsonify, url_for, flash
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
@@ -14,6 +16,13 @@ import json
 
 app = Flask(__name__)
 socket = SocketIO(app)
+
+def test():
+    print("yes i got here")
+    return 1
+
+limiter = Limiter(test,app=app,application_limits=["50 per minute"],default_limits_per_method=True)     # this limiter only counts refresh as one request but works fine otherwise.
+                                                                                                        # so spamming refresh 50 times will trigger this but so will spamming login, even when refresh has 4 requests.
 
 #DataBase
 client = MongoClient("Server312",27017)
@@ -596,6 +605,10 @@ def add_nosniff(response):
 @app.route("/<path:folder>/<path:file>", methods=['GET'])
 def style(folder, file):
     return send_from_directory(folder, file)
-   
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return "<body style=\"text-align: center;font-size: xx-large;\"><h1>You are sending too many requests!</h1> Try again in a minute...</body>", 429
+
 if __name__ =='__main__':
     app.run(host ='0.0.0.0', port=8080)
